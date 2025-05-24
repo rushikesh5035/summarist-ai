@@ -12,7 +12,7 @@ const HeroSection = () => {
           variant={"secondary"}
           className="relative px-6 py-2 text-base font-medium bg-white rounded-full group-hover:bg-gray-50 transition-colors duration-200"
         >
-          <Sparkles className="h-6 w-6 mr-2 text-rose-600 animate-pulse" />
+          <Sparkles className="h-10 w-10 mr-2 text-rose-600 animate-pulse" />
           <p className="text-base text-rose-600">Powered by AI</p>
         </Badge>
       </div>
