@@ -74,7 +74,7 @@ const UploadForm = () => {
 
     // parse the pdf using lang chain
     const summary = await generatePdfSummary(resp);
-    console.log({ summary });
+    // console.log({ summary });
 
     // summarize the PDF using AI
     // save the summary to the DB

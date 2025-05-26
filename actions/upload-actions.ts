@@ -40,7 +40,7 @@ export async function generatePdfSummary(
 
   try {
     const pdfText = await fetchAndExtractPdfText(pdfUrl);
-    console.log(pdfText);
+    // console.log({ pdfText });
   } catch (error) {
     return {
       success: false,
