@@ -4,7 +4,11 @@ import UploadFormInput from "@/components/upload/UploadFormInput";
 import { z } from "zod";
 import { useUploadThing } from "@/utils/uploadthing";
 import { toast } from "sonner";
-import { generatePdfSummary } from "@/actions/upload-actions";
+import {
+  generatePdfSummary,
+  storePdfSummaryAction,
+} from "@/actions/upload-actions";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   file: z
@@ -22,6 +26,7 @@ const schema = z.object({
 const UploadForm = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const { startUpload, routeConfig } = useUploadThing("pdfUploader", {
     onClientUploadComplete: () => {
@@ -32,7 +37,7 @@ const UploadForm = () => {
         description: err.message,
       });
     },
-    onUploadBegin: ({ file }) => {
+    onUploadBegin: (file) => {
       console.log("upload has begin for", file);
     },
   });
@@ -63,8 +68,6 @@ const UploadForm = () => {
         description: "We are uploading your PDF!",
       });
 
-      // schema with zod
-
       // upload file to uploadthing
       const resp = await startUpload([file]);
       if (!resp) {
@@ -79,25 +82,52 @@ const UploadForm = () => {
         description: "Hang tight! Our AI is reading through your document! ✨",
       });
 
-      // parse the pdf using lang chain
-      const result = await generatePdfSummary(resp);
+      // parse the pdf using lang chain and summarize the PDF using AI
+      const result = await generatePdfSummary([
+        {
+          serverData: {
+            userId: resp[0].serverData.userId,
+            file: {
+              ufsUrl: resp[0].serverData.file.ufsUrl,
+              name: resp[0].serverData.file.name,
+            },
+          },
+        },
+      ]);
 
       const { data = null, message = null } = result || {};
 
       if (data) {
+        let storeResult: any;
         toast("📄 Saving PDF...", {
           description: "We are saving your summary!✨",
         });
-        formRef.current?.reset();
+
         if (data.summary) {
-          // save the summary to the DB
-          
+          storeResult = await storePdfSummaryAction({
+            summary: data.summary,
+            fileUrl: resp[0].serverData.file.ufsUrl,
+            title: data.title,
+            fileName: file.name,
+          });
+
+          toast("✨ Summary Generated!", {
+            description: "Your PDF has been successfully summarized and saved",
+          });
+
+          formRef.current?.reset();
+          setIsLoading(false);
+          // redirect to the [id] summary page
+          router.push(`/summaries/${storeResult.data.id}`);
         }
+      } else {
+        toast("❌ Something went wrong", {
+          description: message || "Failed to generate summary.",
+        });
+        setIsLoading(false);
       }
-      // summarize the PDF using AI
-      // redirect to the [id] summary page
     } catch (error) {
-      setIsLoading(true);
+      setIsLoading(false);
       console.error("Error occurred", error);
       formRef.current?.reset();
     }
