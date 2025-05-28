@@ -10,8 +10,6 @@ export async function fetchAndExtractPdfText(fileUrl: string) {
 
   const docs = await loader.load();
 
-  // console.log(docs[0]);
-
   //combine all pages
   return docs.map((doc) => doc.pageContent).join("\n");
 }
