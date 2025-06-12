@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Summarist.ai 📝🚀
 
-## Getting Started
+AI-powered application that transforms PDFs into clear, structured visual summaries!
 
-First, run the development server:
+## 🌟 Features
+
+- 🤖 **AI Summarization**: Generate concise, emoji-enhanced summaries using Gemini AI.
+- 📊 **Interactive Viewer**: Track progress and engage with beautifully structured summaries.
+- 📊 **User Dashboard**: Manage your summaries with ease.
+- 🔒 **Secure Processing**: Robust file handling with protected routes and APIs.
+- 💻 **Responsive Design**: Seamlessly optimized for mobile and desktop.
+- 💰 **Flexible Plans**: Choose between Basic and Pro subscription tiers.
+- 📜 **Markdown Export**: Easily convert summaries into blog-ready markdown files.
+
+## 🚀 Tech Stack
+
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS
+- **AI Integration**: Google Gemini AI, LangChain
+- **Database**: NeonDB (PostgreSQL)
+- **Authentication**: Clerk
+- **File Uploads**: UploadThing
+- **Payments**: Stripe
+- **Styling**: ShadCN UI, Framer Motion, Tailwind CSS, Lucide React
+- **Development**: Turborepo, ESLint, Prettier
+- **Deployment**: Vercel
+
+## 🛠️ Getting Started
+
+### 1. Clone the repository:
+
+```bash
+git clone https://github.com/rushikesh5035/summarist-ai.git
+cd summarist-ai
+```
+
+### 2. Install dependencies:
+
+```bash
+npm install
+```
+
+### 3. Set up environment variables:
+
+```bash
+cp .env.example .env
+```
+
+Edit .env with your configuration:
+
+- Database URL
+- Google Gemini API Key
+- Clerk API Key
+- Stripe API Key
+- UploadThing API Key
+- Other necessary credentials
+
+### 4. Start development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 5. Visit localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# 🤝 Contributing
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Learn More
+# 📝 License
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License - see the LICENSE file for details.
