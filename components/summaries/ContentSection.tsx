@@ -27,11 +27,10 @@ const RegularPoint = ({ point }: { point: string }) => {
       variants={itemVarient}
       className="group relative bg-linear-to-br from-gray-200/[0.08] to-gray-400/[0.03] p-4 rounded-2xl border border-gray-500/10 hover:shadow-lg transition-all"
     >
-      <div className="absolute inset-0 bg-linear-to-r from-gray-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
-        <p className="relative text-xl lg:text-xl text-muted-foreground/90 leading-relaxed text-left">
-          {point}
-        </p>
-      </div>
+      <div className="absolute inset-0 bg-linear-to-r from-gray-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
+      <p className="relative text-lg lg:text-xl text-muted-foreground/90 leading-relaxed">
+        {point}
+      </p>
     </MotionDiv>
   );
 };

@@ -14,7 +14,7 @@ export async function generateSummaryFromGemini(
 ): Promise<string | null> {
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash-latest",
+      model: "gemini-2.5-flash",
     });
 
     const fullPrompt = `${SUMMARY_SYSTEM_PROMPT}\n\nDocument:\n\n${pdfText}\n\nTransform this document into an engaging, easy-to-read summary with contextually relevant emojis and proper markdown formatting based on the provided template.`;

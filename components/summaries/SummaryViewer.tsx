@@ -37,7 +37,7 @@ const SummaryViewer = ({ summary }: { summary: string }) => {
     <Card
       className="relative px-2
     h-[500px] sm:h-[600px] lg:h-[500px]
-    w-full xl:w-[8500px]
+    w-full max-w-4xl
     overflow-hidden
     bg-linear-to-br from-background via-background/95 to-rose-500/5
     backdrop-blur-lg shadow-2xl rounded-3xl
