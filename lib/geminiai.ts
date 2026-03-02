@@ -10,7 +10,7 @@ if (!apiKey) {
 const genAI = new GoogleGenerativeAI(apiKey);
 
 export async function generateSummaryFromGemini(
-  pdfText: string
+  pdfText: string,
 ): Promise<string | null> {
   try {
     const model = genAI.getGenerativeModel({
