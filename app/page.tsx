@@ -1,3 +1,4 @@
+import CTA from "@/components/landing/CTA";
 import FAQ from "@/components/landing/FAQ";
 import Features from "@/components/landing/Features";
 import HeroSection from "@/components/landing/HeroSection";
@@ -18,6 +19,7 @@ export default function Home() {
       <Testimonials />
       <Pricing />
       <FAQ />
+      <CTA />
     </div>
   );
 }
