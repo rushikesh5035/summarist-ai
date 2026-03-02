@@ -34,7 +34,7 @@ export const hasReachedUploadLimit = async (userId: string) => {
 
 export const getSubscriptionStatus = async (user: User) => {
   const hasSubscription = await hasActivePlan(
-    user.emailAddresses[0].emailAddress
+    user.emailAddresses[0].emailAddress,
   );
 
   return hasSubscription;

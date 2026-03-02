@@ -78,7 +78,7 @@ const NavLink: React.FC<NavLinkProps> = ({
   >
     {children}
     <motion.div
-      className="absolute bottom-[-2px] left-0 right-0 h-[1px] bg-[#0CF2A0]"
+      className="absolute bottom-0.5 left-0 right-0 h-px bg-[#0CF2A0]"
       variants={{ initial: { scaleX: 0 }, hover: { scaleX: 1 } }}
       initial="initial"
       transition={{ duration: 0.3, ease: "easeOut" }}
@@ -124,10 +124,10 @@ const Navbar = () => {
       transition={{ duration: 0.3, ease: "easeInOut" }}
       className={`fixed w-full top-0 z-50 px-6 md:px-10 lg:px-16 border-b transition-all duration-100 ${isScrolled ? "backdrop-blur-xl" : "backdrop-blur-none"}`}
     >
-      <nav className="flex justify-between items-center max-w-screen-xl mx-auto h-[60px]">
+      <nav className="flex justify-between items-center max-w-5xl mx-auto h-15">
         {/* LOGO */}
-        <div className="flex items-center flex-shrink-0">
-          <div className="w-9 h-9 bg-gradient-to-br from-[#0CF2A0] to-[#0CF2A0]/60 rounded-xl flex items-center justify-center relative">
+        <div className="flex items-center shrink-0">
+          <div className="w-9 h-9 bg-linear-to-br from-[#0CF2A0] to-[#0CF2A0]/60 rounded-xl flex items-center justify-center relative">
             <svg
               width="20"
               height="20"
@@ -170,21 +170,20 @@ const Navbar = () => {
         </div>
 
         {/* Nav Menu */}
-        <div className="hidden md:flex items-center justify-center flex-grow space-x-8 px-4">
+        <div className="hidden md:flex items-center justify-center grow space-x-8 px-4">
           <NavLink href="#features">Features</NavLink>
           <NavLink href="#how-it-works">How it Works</NavLink>
           <NavLink href="#use-cases">Use Cases</NavLink>
           <NavLink href="#pricing">Pricing</NavLink>
         </div>
 
-        <div className="flex items-center flex-shrink-0 space-x-5">
+        <div className="flex items-center shrink-0">
           <Button
             onClick={() => router.push("/")}
             className="bg-[#0CF2A0] text-[#0a0a0a] hover:bg-[#0CF2A0]/90 px-5 py-2 text-sm font-semibold rounded-xl shadow-lg shadow-[#0CF2A0]/10"
           >
             Sign in
           </Button>
-          {/* </motion.div> */}
           <motion.button
             className="md:hidden text-gray-300 hover:text-white z-50"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

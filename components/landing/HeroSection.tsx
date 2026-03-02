@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles, ChevronRight } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Navbar from "../common/navbar";
@@ -250,7 +250,7 @@ const HeroSection: React.FC = () => {
         className="absolute inset-0 z-0 pointer-events-none opacity-60"
       />
       <div
-        className="absolute inset-0 z-[1] pointer-events-none"
+        className="absolute inset-0 z-1 pointer-events-none"
         style={{
           background:
             "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(12, 242, 160, 0.08) 0%, transparent 60%), linear-gradient(to bottom, transparent 0%, #0a0a0a 95%)",
@@ -261,8 +261,8 @@ const HeroSection: React.FC = () => {
       <Navbar />
 
       {/* ── Hero Content ── */}
-      <main className="relative z-10 pt-[140px] pb-8">
-        <div className="max-w-screen-xl mx-auto px-6 md:px-10 lg:px-16">
+      <main className="relative z-10 pt-35 pb-8">
+        <div className="max-w-6xl mx-auto px-6 md:px-10 lg:px-16">
           {/* Top Badge */}
           <motion.div
             variants={bannerVariants}
@@ -270,10 +270,14 @@ const HeroSection: React.FC = () => {
             animate="visible"
             className="flex justify-center mb-8"
           >
-            <ShinyText
-              text="Announcing our $15M Series A"
-              className="bg-[#1a1a1a] border border-gray-700 text-[#0CF2A0] px-4 py-1 rounded-full text-xs sm:text-sm font-medium cursor-pointer hover:border-[#0CF2A0]/50 transition-colors"
-            />
+            <div className="bg-[#1a1a1a] border border-gray-700 px-4 py-1 rounded-full text-xs sm:text-sm font-medium cursor-pointer hover:border-[#0CF2A0]/50 transition-colors flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-[#0CF2A0]" />
+              <ShinyText
+                text="AI-Powered PDF Intelligence"
+                className="text-[#0CF2A0]"
+              />
+              <ChevronRight className="w-3.5 h-3.5 text-[#0CF2A0]" />
+            </div>
           </motion.div>
 
           {/* Headline */}
@@ -361,7 +365,7 @@ const HeroSection: React.FC = () => {
                 </div>
               </div>
               {/* Video Area */}
-              <div className="relative aspect-video bg-gradient-to-br from-[#0d0d0d] via-[#111] to-[#0d0d0d] flex items-center justify-center">
+              <div className="relative aspect-video bg-linear-to-br from-[#0d0d0d] via-[#111] to-[#0d0d0d] flex items-center justify-center">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(12,242,160,0.06),transparent_50%),radial-gradient(circle_at_70%_60%,rgba(147,51,234,0.05),transparent_50%)]" />
                 {/* Play Button */}
                 <motion.button
@@ -369,7 +373,7 @@ const HeroSection: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   className="relative z-10 w-20 h-20 rounded-full bg-[#0CF2A0]/10 border-2 border-[#0CF2A0]/30 flex items-center justify-center backdrop-blur-sm group cursor-pointer"
                 >
-                  <div className="w-0 h-0 border-l-[18px] border-l-[#0CF2A0] border-t-[11px] border-t-transparent border-b-[11px] border-b-transparent ml-1.5 group-hover:border-l-white transition-colors" />
+                  <div className="w-0 h-0 border-l-18 border-l-[#0CF2A0] border-t-11 border-t-transparent border-b-11 border-b-transparent ml-1.5 group-hover:border-l-white transition-colors" />
                 </motion.button>
                 {/* Decorative Elements */}
                 <div className="absolute bottom-6 left-6 text-xs text-gray-600">

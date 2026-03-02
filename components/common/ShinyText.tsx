@@ -6,7 +6,7 @@ const ShinyText: React.FC<{ text: string; className?: string }> = ({
 }) => (
   <span className={cn("relative overflow-hidden inline-block", className)}>
     {text}
-    <span
+    {/* <span
       style={{
         position: "absolute",
         inset: 0,
@@ -16,7 +16,7 @@ const ShinyText: React.FC<{ text: string; className?: string }> = ({
         opacity: 0.5,
         pointerEvents: "none",
       }}
-    ></span>
+    ></span> */}
     <style>{`
             @keyframes shine {
                 0% { transform: translateX(-100%); }
