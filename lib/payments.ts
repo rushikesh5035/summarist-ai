@@ -8,7 +8,6 @@ export const handleCheckoutSessionCompleted = async ({
   session: Stripe.Checkout.Session;
   stripe: Stripe;
 }) => {
-  //
   console.log("Checkout session completed", session);
 
   const customerId = session.customer as string;
