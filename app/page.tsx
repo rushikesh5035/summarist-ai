@@ -1,3 +1,4 @@
+import FAQ from "@/components/landing/FAQ";
 import Features from "@/components/landing/Features";
 import HeroSection from "@/components/landing/HeroSection";
 import HowItWorks from "@/components/landing/HowItWorks";
@@ -16,6 +17,7 @@ export default function Home() {
       <UseCases />
       <Testimonials />
       <Pricing />
+      <FAQ />
     </div>
   );
 }
