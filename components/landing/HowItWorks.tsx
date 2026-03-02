@@ -7,7 +7,7 @@ const HowItWorks = () => {
   return (
     <section className="py-24 bg-[#0a0a0a] relative" id="how-it-works">
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-        <div className="w-200 h-150 rounded-full bg-[radial-gradient(circle,rgba(12,242,160,0.06)_0%,rgba(12,242,160,0.03)_10%,transparent_70%)]" />
+        <div className="w-150 h-150 rounded-full bg-[radial-gradient(circle,rgba(12,242,160,0.06)_0%,rgba(12,242,160,0.03)_10%,transparent_70%)]" />
       </div>
 
       <div className="max-w-6xl mx-auto px-6 md:px-10 lg:px-16 relative z-10">
