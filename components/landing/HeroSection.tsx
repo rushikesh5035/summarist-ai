@@ -281,7 +281,7 @@ const HeroSection: React.FC = () => {
           </motion.div>
 
           {/* Headline */}
-          <div className="text-center max-w-5xl mx-auto mb-8">
+          <div className="text-center max-w-5xl mx-auto">
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -318,7 +318,7 @@ const HeroSection: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="text-center text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed"
+            className="text-center text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-8 leading-relaxed"
           >
             Upload any PDF and get instant AI summaries or have a real
             conversation with your document.

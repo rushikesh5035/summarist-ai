@@ -1,6 +1,7 @@
 import CTA from "@/components/landing/CTA";
 import FAQ from "@/components/landing/FAQ";
 import Features from "@/components/landing/Features";
+import Footer from "@/components/landing/Footer";
 import HeroSection from "@/components/landing/HeroSection";
 import HowItWorks from "@/components/landing/HowItWorks";
 import Pricing from "@/components/landing/Pricing";
@@ -20,6 +21,7 @@ export default function Home() {
       <Pricing />
       <FAQ />
       <CTA />
+      <Footer />
     </div>
   );
 }

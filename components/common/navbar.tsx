@@ -16,6 +16,7 @@ import {
 } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // ── Nav Icons ──────────────────────────────
 const MenuIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
@@ -164,13 +165,16 @@ const Navbar = () => {
               />
             </svg>
           </div>
-          <span className="text-xl font-bold text-white ml-2.5 tracking-tight">
-            Summarist
-          </span>
+          <Link href={"/"}>
+            <span className="text-xl font-bold text-white ml-2.5 tracking-tight">
+              Summarist
+            </span>
+          </Link>
         </div>
 
         {/* Nav Menu */}
         <div className="hidden md:flex items-center justify-center grow space-x-8 px-4">
+          <NavLink href="/">Home</NavLink>
           <NavLink href="#features">Features</NavLink>
           <NavLink href="#how-it-works">How it Works</NavLink>
           <NavLink href="#use-cases">Use Cases</NavLink>
@@ -205,6 +209,9 @@ const Navbar = () => {
             className="md:hidden absolute top-full left-0 right-0 bg-[#0a0a0a]/95 backdrop-blur-sm shadow-lg py-4 border-t border-gray-800/50"
           >
             <div className="flex flex-col items-center space-y-4 px-6">
+              <NavLink href="/" onClick={() => setIsMobileMenuOpen(false)}>
+                Home
+              </NavLink>
               <NavLink
                 href="#features"
                 onClick={() => setIsMobileMenuOpen(false)}
