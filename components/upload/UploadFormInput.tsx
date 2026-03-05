@@ -1,9 +1,11 @@
 "use client";
 import React, { forwardRef } from "react";
+
+import { Loader2 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
 
 interface UploadFormInputProps {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -14,7 +16,7 @@ const UploadFormInput = forwardRef<HTMLFormElement, UploadFormInputProps>(
   ({ onSubmit, isLoading }, ref) => {
     return (
       <form ref={ref} className="flex flex-col gap-6" onSubmit={onSubmit}>
-        <div className="flex justify-end items-center gap-1.5">
+        <div className="flex items-center justify-end gap-1.5">
           <Input
             type="file"
             id="file"
@@ -22,7 +24,7 @@ const UploadFormInput = forwardRef<HTMLFormElement, UploadFormInputProps>(
             accept="application/pdf"
             required
             disabled={isLoading}
-            className={cn(isLoading && "opacity-50 cursor-not-allowed")}
+            className={cn(isLoading && "cursor-not-allowed opacity-50")}
           />
           <Button disabled={isLoading}>
             {isLoading ? (

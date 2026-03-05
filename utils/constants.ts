@@ -2,8 +2,8 @@ import { isDev } from "@/utils/helper";
 
 export const pricingPlans = [
   {
-    name: "Basic",
-    price: 7,
+    name: "Free",
+    price: 0,
     description: "Perfect for occasinal use",
     items: [
       "5 PDF summaries per month",

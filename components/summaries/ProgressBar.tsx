@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import React from "react";
+
+import { cn } from "@/lib/utils";
 
 const ProgressBar = ({
   sections,
@@ -9,11 +10,11 @@ const ProgressBar = ({
   currentSection: number;
 }) => {
   return (
-    <div className="absolute top-0 left-0 right-0 z-20 bg-background/80 backdrop-blur-xs pt-4 pb-2 border-b border-rose-50/10">
-      <div className="px-4 flex gap-1.5">
+    <div className="bg-background/80 absolute top-0 right-0 left-0 z-20 border-b border-rose-50/10 pt-4 pb-2 backdrop-blur-xs">
+      <div className="flex gap-1.5 px-4">
         {sections.map((_, index) => (
           <div
-            className="h-1.5 flex-1 rounded-full bg-rose-500/10 overflow-hidden"
+            className="h-1.5 flex-1 overflow-hidden rounded-full bg-rose-500/10"
             key={index}
           >
             <div
@@ -23,8 +24,8 @@ const ProgressBar = ({
                 index === currentSection
                   ? "w-full"
                   : currentSection > index
-                  ? "w-full opacity-10"
-                  : "w-0"
+                    ? "w-full opacity-10"
+                    : "w-0"
               )}
             ></div>
           </div>

@@ -1,59 +1,17 @@
+"use client";
+
+import { type MouseEvent as ReactMouseEvent, ReactNode, useState } from "react";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
+import { motion, useMotionValueEvent, useScroll, Variants } from "motion/react";
+
 import { cn } from "@/lib/utils";
 
-import {
-  AnimatePresence,
-  motion,
-  useMotionValueEvent,
-  useScroll,
-  Variants,
-} from "motion/react";
-import {
-  ReactNode,
-  SVGProps,
-  useEffect,
-  useState,
-  type MouseEvent as ReactMouseEvent,
-} from "react";
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-
-// ── Nav Icons ──────────────────────────────
-const MenuIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className="w-6 h-6"
-    {...props}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-    />
-  </svg>
-);
-
-const CloseIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className="w-6 h-6"
-    {...props}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M6 18 18 6M6 6l12 12"
-    />
-  </svg>
-);
+import { Skeleton } from "../ui/skeleton";
 
 interface NavLinkProps {
   href?: string;
@@ -72,14 +30,14 @@ const NavLink: React.FC<NavLinkProps> = ({
     href={href}
     onClick={onClick}
     className={cn(
-      "relative group text-sm font-medium text-gray-400 hover:text-white transition-colors duration-200 flex items-center py-1",
-      className,
+      "group relative flex items-center py-1 text-sm font-medium text-gray-400 transition-colors duration-200 hover:text-white",
+      className
     )}
     whileHover="hover"
   >
     {children}
     <motion.div
-      className="absolute bottom-0.5 left-0 right-0 h-px bg-[#0CF2A0]"
+      className="absolute right-0 bottom-0.5 left-0 h-px bg-[#0CF2A0]"
       variants={{ initial: { scaleX: 0 }, hover: { scaleX: 1 } }}
       initial="initial"
       transition={{ duration: 0.3, ease: "easeOut" }}
@@ -90,7 +48,7 @@ const NavLink: React.FC<NavLinkProps> = ({
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const router = useRouter();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const { isLoaded, isSignedIn } = useUser();
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -110,25 +68,18 @@ const Navbar = () => {
     },
   };
 
-  useEffect(() => {
-    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "unset";
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isMobileMenuOpen]);
-
   return (
     <motion.header
       variants={headerVariants}
       initial="top"
       animate={isScrolled ? "scrolled" : "top"}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className={`fixed w-full top-0 z-50 px-6 md:px-10 lg:px-16 border-b transition-all duration-100 ${isScrolled ? "backdrop-blur-xl" : "backdrop-blur-none"}`}
+      className={`fixed top-0 z-50 w-full border-b px-6 transition-all duration-100 md:px-10 lg:px-16 ${isScrolled ? "backdrop-blur-xl" : "backdrop-blur-none"}`}
     >
-      <nav className="flex justify-between items-center max-w-5xl mx-auto h-15">
+      <nav className="mx-auto flex h-15 max-w-5xl items-center justify-between">
         {/* LOGO */}
-        <div className="flex items-center shrink-0">
-          <div className="w-9 h-9 bg-linear-to-br from-[#0CF2A0] to-[#0CF2A0]/60 rounded-xl flex items-center justify-center relative">
+        <div className="flex shrink-0 items-center">
+          <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-[#0CF2A0] to-[#0CF2A0]/60">
             <svg
               width="20"
               height="20"
@@ -166,14 +117,14 @@ const Navbar = () => {
             </svg>
           </div>
           <Link href={"/"}>
-            <span className="text-xl font-bold text-white ml-2.5 tracking-tight">
+            <span className="ml-2.5 text-xl font-bold tracking-tight text-white">
               Summarist
             </span>
           </Link>
         </div>
 
         {/* Nav Menu */}
-        <div className="hidden md:flex items-center justify-center grow space-x-8 px-4">
+        <div className="hidden grow items-center justify-center space-x-8 px-4 md:flex">
           <NavLink href="/">Home</NavLink>
           <NavLink href="#features">Features</NavLink>
           <NavLink href="#how-it-works">How it Works</NavLink>
@@ -181,69 +132,26 @@ const Navbar = () => {
           <NavLink href="#pricing">Pricing</NavLink>
         </div>
 
-        <div className="flex items-center shrink-0">
-          <Button
-            onClick={() => router.push("/")}
-            className="bg-[#0CF2A0] text-[#0a0a0a] hover:bg-[#0CF2A0]/90 px-5 py-2 text-sm font-semibold rounded-xl shadow-lg shadow-[#0CF2A0]/10"
-          >
-            Sign in
-          </Button>
-          <motion.button
-            className="md:hidden text-gray-300 hover:text-white z-50"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-            whileTap={{ scale: 0.9 }}
-          >
-            {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
-          </motion.button>
+        <div className="flex shrink-0 items-center gap-4">
+          {!isLoaded ? (
+            <Skeleton className="h-8 w-8 rounded-full" />
+          ) : (
+            <>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+              <SignedOut>
+                <Button
+                  onClick={() => router.push("/sign-in")}
+                  className="rounded-xl bg-[#0CF2A0] px-5 py-2 text-sm font-semibold text-[#0a0a0a] shadow-lg shadow-[#0CF2A0]/10 hover:bg-[#0CF2A0]/90"
+                >
+                  Sign in
+                </Button>
+              </SignedOut>
+            </>
+          )}
         </div>
       </nav>
-
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            key="mobile-menu"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="md:hidden absolute top-full left-0 right-0 bg-[#0a0a0a]/95 backdrop-blur-sm shadow-lg py-4 border-t border-gray-800/50"
-          >
-            <div className="flex flex-col items-center space-y-4 px-6">
-              <NavLink href="/" onClick={() => setIsMobileMenuOpen(false)}>
-                Home
-              </NavLink>
-              <NavLink
-                href="#features"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Features
-              </NavLink>
-              <NavLink
-                href="#how-it-works"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                How it Works
-              </NavLink>
-              <NavLink
-                href="#use-cases"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Use Cases
-              </NavLink>
-              <NavLink
-                href="#pricing"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Pricing
-              </NavLink>
-              <hr className="w-full border-t border-gray-700/50 my-2" />
-              <NavLink href="#" onClick={() => setIsMobileMenuOpen(false)}>
-                Sign in
-              </NavLink>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.header>
   );
 };

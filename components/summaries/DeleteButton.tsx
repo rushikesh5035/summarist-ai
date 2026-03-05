@@ -1,7 +1,11 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { useState, useTransition } from "react";
 
+import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
+
+import { deleteSummaryAction } from "@/actions/summary-actions";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,9 +15,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState, useTransition } from "react";
-import { deleteSummaryAction } from "@/actions/summary-actions";
-import { toast } from "sonner";
 
 interface DeleteButtonProps {
   summaryId: string;
@@ -40,9 +41,9 @@ const DeleteButton = ({ summaryId }: DeleteButtonProps) => {
         <Button
           variant={"ghost"}
           size={"icon"}
-          className="text-gray-400 bg-gray-50 border border-gray-200 hover:text-rose-600 hover:bg-rose-50"
+          className="border border-gray-200 bg-gray-50 text-gray-400 hover:bg-rose-50 hover:text-rose-600"
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="h-4 w-4" />
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -56,14 +57,14 @@ const DeleteButton = ({ summaryId }: DeleteButtonProps) => {
         <DialogFooter>
           <Button
             variant="ghost"
-            className=" bg-gray-50 border border-gray-200 hover:text-gray-600 hover:bg-gray-100"
+            className="border border-gray-200 bg-gray-50 hover:bg-gray-100 hover:text-gray-600"
             onClick={() => setOpen(false)}
           >
             Cancel
           </Button>
           <Button
             variant="destructive"
-            className=" bg-gray-900  hover:bg-gray-600"
+            className="bg-gray-900 hover:bg-gray-600"
             onClick={handleDelete}
           >
             {isPending ? "Deleting..." : "Delete"}

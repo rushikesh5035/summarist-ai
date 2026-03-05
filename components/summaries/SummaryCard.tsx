@@ -1,11 +1,14 @@
 import React from "react";
-import { Card } from "@/components/ui/card";
-import DeleteButton from "@/components/summaries/DeleteButton";
+
 import Link from "next/link";
-import { FileText } from "lucide-react";
-import { cn, formatFileName } from "@/lib/utils";
+
 import { formatDistanceToNow } from "date-fns";
-import { MotionDiv } from "@/components/common/motion-wrapper";
+import { FileText } from "lucide-react";
+import { motion } from "motion/react";
+
+import DeleteButton from "@/components/summaries/DeleteButton";
+import { Card } from "@/components/ui/card";
+import { cn, formatFileName } from "@/lib/utils";
 import { itemVarient } from "@/utils/constants";
 
 const SummaryHeader = ({
@@ -19,9 +22,9 @@ const SummaryHeader = ({
 }) => {
   return (
     <div className="flex items-start gap-2 sm:gap-4">
-      <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-rose-400 mt-1" />
-      <div className="flex-1 min-w-0">
-        <h3 className="text-base xl:text-lg font-semibold text-gray-900 truncate w-4/5">
+      <FileText className="mt-1 h-6 w-6 text-rose-400 sm:h-8 sm:w-8" />
+      <div className="min-w-0 flex-1">
+        <h3 className="w-4/5 truncate text-base font-semibold text-gray-900 xl:text-lg">
           {title || formatFileName(fileUrl)}
         </h3>
         <p className="text-sm text-gray-500">
@@ -36,7 +39,7 @@ const StatusBadge = ({ status }: { status: string }) => {
   return (
     <span
       className={cn(
-        "px-3 py-1 text-xs font-medium rounded-full capitalize",
+        "rounded-full px-3 py-1 text-xs font-medium capitalize",
         status === "completed"
           ? "bg-green-100 text-green-800"
           : "bg-yellow-100 text-yellow-800"
@@ -49,8 +52,7 @@ const StatusBadge = ({ status }: { status: string }) => {
 
 export default function SummaryCard({ summary }: { summary: any }) {
   return (
-    <MotionDiv
-      variants={itemVarient}
+    <motion.div
       initial="hidden"
       animate="visible"
       whileHover={{
@@ -59,7 +61,7 @@ export default function SummaryCard({ summary }: { summary: any }) {
       }}
     >
       <Card className="relative h-full">
-        <div className="absolute top-6 right-4  ">
+        <div className="absolute top-6 right-4">
           <DeleteButton summaryId={summary.id} />
         </div>
 
@@ -70,16 +72,16 @@ export default function SummaryCard({ summary }: { summary: any }) {
               title={summary.title}
               createdAt={summary.created_at}
             />
-            <p className="text-gray-600 line-clamp-2 text-sm sm:text-base pl-2">
+            <p className="line-clamp-2 pl-2 text-sm text-gray-600 sm:text-base">
               {summary.summary_text}
             </p>
 
-            <div className="flex justify-between items-center mt-2 sm:mt-4">
+            <div className="mt-2 flex items-center justify-between sm:mt-4">
               <StatusBadge status={summary.status} />
             </div>
           </div>
         </Link>
       </Card>
-    </MotionDiv>
+    </motion.div>
   );
 }

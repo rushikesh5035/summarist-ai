@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+
 import { getDBConnection } from "@/lib/db";
 
 export const handleCheckoutSessionCompleted = async ({

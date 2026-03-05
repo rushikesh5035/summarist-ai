@@ -11,7 +11,7 @@ import UseCases from "@/components/landing/UseCases";
 
 export default function Home() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background">
+    <div className="bg-background min-h-screen overflow-x-hidden">
       <HeroSection />
       <Features />
       <Stats />

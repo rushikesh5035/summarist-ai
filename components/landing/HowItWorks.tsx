@@ -1,41 +1,42 @@
 "use client";
 
-import { steps } from "@/data/HowItWorksSteps";
 import { motion } from "motion/react";
+
+import { steps } from "@/data/HowItWorksSteps";
 
 const HowItWorks = () => {
   return (
-    <section className="py-24 bg-[#0a0a0a] relative" id="how-it-works">
+    <section className="relative bg-[#0a0a0a] py-24" id="how-it-works">
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-        <div className="w-150 h-150 rounded-full bg-[radial-gradient(circle,rgba(12,242,160,0.06)_0%,rgba(12,242,160,0.03)_10%,transparent_70%)]" />
+        <div className="h-150 w-150 rounded-full bg-[radial-gradient(circle,rgba(12,242,160,0.06)_0%,rgba(12,242,160,0.03)_10%,transparent_70%)]" />
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 md:px-10 lg:px-16 relative z-10">
+      <div className="relative z-10 mx-auto max-w-6xl px-6 md:px-10 lg:px-16">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-20"
+          className="mb-20 text-center"
         >
-          <span className="text-[#0CF2A0] text-sm font-semibold uppercase tracking-widest mb-4 block">
+          <span className="mb-4 block text-sm font-semibold tracking-widest text-[#0CF2A0] uppercase">
             How It Works
           </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight">
+          <h2 className="text-4xl font-bold tracking-tight text-white md:text-5xl lg:text-6xl">
             Three steps.
             <br />
             <span className="text-gray-500">Zero friction.</span>
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto relative">
+        <div className="relative mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-3">
           {/* Connecting line */}
           <motion.div
             initial={{ scaleX: 0, opacity: 0 }}
             whileInView={{ scaleX: 1, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeInOut" }}
             viewport={{ once: true }}
-            className="hidden md:block absolute top-8 left-[20%] right-[20%] h-px bg-linear-to-r from-transparent via-gray-700 to-transparent origin-left"
+            className="absolute top-8 right-[20%] left-[20%] hidden h-px origin-left bg-linear-to-r from-transparent via-gray-700 to-transparent md:block"
           />
 
           {steps.map((step, index) => (
@@ -45,24 +46,24 @@ const HowItWorks = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.15, duration: 0.5 }}
               viewport={{ once: true }}
-              className="relative text-center group"
+              className="group relative text-center"
             >
-              <div className="relative w-16 h-16 mx-auto mb-6">
-                <div className="absolute inset-0 flex items-center justify-center text-5xl font-black text-gray-800/20 select-none pointer-events-none -top-6">
+              <div className="relative mx-auto mb-6 h-16 w-16">
+                <div className="pointer-events-none absolute inset-0 -top-6 flex items-center justify-center text-5xl font-black text-gray-800/20 select-none">
                   {step.step}
                 </div>
                 <motion.div
                   whileHover={{ scale: 1.1, rotate: 5 }}
-                  className="w-16 h-16 rounded-2xl bg-[#111] border border-gray-800 flex items-center justify-center relative z-10 group-hover:border-[#0CF2A0]/30 transition-colors"
+                  className="relative z-10 flex h-16 w-16 items-center justify-center rounded-2xl border border-gray-800 bg-[#111] transition-colors group-hover:border-[#0CF2A0]/30"
                 >
-                  <step.icon className="w-7 h-7 text-[#0CF2A0]" />
+                  <step.icon className="h-7 w-7 text-[#0CF2A0]" />
                 </motion.div>
               </div>
 
-              <h4 className="text-xl font-bold text-white mb-3">
+              <h4 className="mb-3 text-xl font-bold text-white">
                 {step.title}
               </h4>
-              <p className="text-gray-500 leading-relaxed max-w-xs mx-auto">
+              <p className="mx-auto max-w-xs leading-relaxed text-gray-500">
                 {step.description}
               </p>
             </motion.div>

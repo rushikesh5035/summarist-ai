@@ -1,8 +1,10 @@
 "use client";
 
-import { stats } from "@/data/Stats";
+import { useEffect, useRef, useState } from "react";
+
 import { motion, useInView } from "motion/react";
-import { useRef, useState, useEffect } from "react";
+
+import { stats } from "@/data/Stats";
 
 const AnimatedNumber: React.FC<{
   target: number;
@@ -38,10 +40,10 @@ const AnimatedNumber: React.FC<{
 
 const Stats = () => {
   return (
-    <section className="py-20 bg-[#0a0a0a] relative overflow-hidden">
+    <section className="relative overflow-hidden bg-[#0a0a0a] py-20">
       <div className="absolute inset-0 bg-linear-to-b from-transparent via-[#0CF2A0]/2 to-transparent" />
-      <div className="max-w-6xl mx-auto px-6 md:px-10 lg:px-16 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4">
+      <div className="relative z-10 mx-auto max-w-6xl px-6 md:px-10 lg:px-16">
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-4">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -49,15 +51,15 @@ const Stats = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
               viewport={{ once: true }}
-              className="text-center p-4 rounded-2xl bg-[#111]/60 border border-gray-800/40"
+              className="rounded-2xl border border-gray-800/40 bg-[#111]/60 p-4 text-center"
             >
-              <div className="text-4xl md:text-5xl font-bold text-white mb-1 tabular-nums">
+              <div className="mb-1 text-4xl font-bold text-white tabular-nums md:text-5xl">
                 <AnimatedNumber target={stat.value} suffix={stat.suffix} />
               </div>
-              <div className="text-[#0CF2A0] text-sm font-semibold mb-1">
+              <div className="mb-1 text-sm font-semibold text-[#0CF2A0]">
                 {stat.label}
               </div>
-              <div className="text-gray-600 text-xs">{stat.description}</div>
+              <div className="text-xs text-gray-600">{stat.description}</div>
             </motion.div>
           ))}
         </div>

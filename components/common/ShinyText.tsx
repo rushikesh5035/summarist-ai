@@ -4,7 +4,7 @@ const ShinyText: React.FC<{ text: string; className?: string }> = ({
   text,
   className = "",
 }) => (
-  <span className={cn("relative overflow-hidden inline-block", className)}>
+  <span className={cn("relative inline-block overflow-hidden", className)}>
     {text}
     {/* <span
       style={{

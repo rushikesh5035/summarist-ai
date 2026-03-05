@@ -1,13 +1,17 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, ChevronRight } from "lucide-react";
-import { motion, type Variants } from "framer-motion";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+
 import { useRouter } from "next/navigation";
+
+import { motion, type Variants } from "framer-motion";
+import { ArrowRight, ChevronRight, Sparkles } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+
 import Navbar from "../common/navbar";
-import ShinyText from "../common/ShinyText";
 import RotatingText from "../common/RotatingText";
+import ShinyText from "../common/ShinyText";
 import ScrollingMarquee from "./ScrollingMarquee";
 
 // ── Dot Grid Canvas ──────────────────────────────
@@ -158,7 +162,7 @@ const HeroSection: React.FC = () => {
         dot.opacitySpeed = -dot.opacitySpeed;
         dot.currentOpacity = Math.max(
           BASE_OPACITY_MIN,
-          Math.min(dot.currentOpacity, BASE_OPACITY_MAX),
+          Math.min(dot.currentOpacity, BASE_OPACITY_MAX)
         );
         dot.targetOpacity =
           Math.random() * (BASE_OPACITY_MAX - BASE_OPACITY_MIN) +
@@ -181,7 +185,7 @@ const HeroSection: React.FC = () => {
 
       const finalOpacity = Math.min(
         1,
-        dot.currentOpacity + interactionFactor * OPACITY_BOOST,
+        dot.currentOpacity + interactionFactor * OPACITY_BOOST
       );
       dot.currentRadius = dot.baseRadius + interactionFactor * RADIUS_BOOST;
 
@@ -217,7 +221,7 @@ const HeroSection: React.FC = () => {
       window.removeEventListener("mousemove", handleMouseMove);
       document.documentElement.removeEventListener(
         "mouseleave",
-        handleMouseLeave,
+        handleMouseLeave
       );
       if (animationFrameId.current)
         cancelAnimationFrame(animationFrameId.current);
@@ -244,13 +248,13 @@ const HeroSection: React.FC = () => {
   const router = useRouter();
 
   return (
-    <div className="relative bg-[#0a0a0a] text-gray-300 overflow-x-hidden">
+    <div className="relative overflow-x-hidden bg-[#0a0a0a] text-gray-300">
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 z-0 pointer-events-none opacity-60"
+        className="pointer-events-none absolute inset-0 z-0 opacity-60"
       />
       <div
-        className="absolute inset-0 z-1 pointer-events-none"
+        className="pointer-events-none absolute inset-0 z-1"
         style={{
           background:
             "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(12, 242, 160, 0.08) 0%, transparent 60%), linear-gradient(to bottom, transparent 0%, #0a0a0a 95%)",
@@ -262,35 +266,35 @@ const HeroSection: React.FC = () => {
 
       {/* ── Hero Content ── */}
       <main className="relative z-10 pt-35 pb-8">
-        <div className="max-w-6xl mx-auto px-6 md:px-10 lg:px-16">
+        <div className="mx-auto max-w-6xl px-6 md:px-10 lg:px-16">
           {/* Top Badge */}
           <motion.div
             variants={bannerVariants}
             initial="hidden"
             animate="visible"
-            className="flex justify-center mb-8"
+            className="mb-8 flex justify-center"
           >
-            <div className="bg-[#1a1a1a] border border-gray-700 px-4 py-1 rounded-full text-xs sm:text-sm font-medium cursor-pointer hover:border-[#0CF2A0]/50 transition-colors flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#0CF2A0]" />
+            <div className="flex cursor-pointer items-center gap-2 rounded-full border border-gray-700 bg-[#1a1a1a] px-4 py-1 text-xs font-medium transition-colors hover:border-[#0CF2A0]/50 sm:text-sm">
+              <Sparkles className="h-4 w-4 text-[#0CF2A0]" />
               <ShinyText
                 text="AI-Powered PDF Intelligence"
                 className="text-[#0CF2A0]"
               />
-              <ChevronRight className="w-3.5 h-3.5 text-[#0CF2A0]" />
+              <ChevronRight className="h-3.5 w-3.5 text-[#0CF2A0]" />
             </div>
           </motion.div>
 
           {/* Headline */}
-          <div className="text-center max-w-5xl mx-auto">
+          <div className="mx-auto max-w-5xl text-center">
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-[82px] font-extrabold text-white leading-[1.08] tracking-tight"
+              className="text-5xl leading-[1.08] font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl lg:text-[82px]"
             >
               Transform PDFs into
               <br />
-              <span className="inline-flex h-[1.3em] overflow-hidden align-bottom justify-center text-[#0CF2A0]">
+              <span className="inline-flex h-[1.3em] justify-center overflow-hidden align-bottom text-[#0CF2A0]">
                 <RotatingText
                   texts={[
                     "Smart Summaries",
@@ -318,7 +322,7 @@ const HeroSection: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="text-center text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-8 leading-relaxed"
+            className="mx-auto mb-8 max-w-2xl text-center text-lg leading-relaxed text-gray-400 sm:text-xl"
           >
             Upload any PDF and get instant AI summaries or have a real
             conversation with your document.
@@ -329,16 +333,16 @@ const HeroSection: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+            className="mb-16 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
             <motion.div>
               <Button
                 size="lg"
                 onClick={() => router.push("/pdf-tools")}
-                className="bg-[#0CF2A0] text-[#0a0a0a] hover:bg-[#0CF2A0]/90 rounded-xl px-10 text-base font-bold shadow-xl shadow-[#0CF2A0]/20 gap-2.5"
+                className="gap-2.5 rounded-xl bg-[#0CF2A0] px-10 text-base font-bold text-[#0a0a0a] shadow-xl shadow-[#0CF2A0]/20 hover:bg-[#0CF2A0]/90"
               >
                 Get Started
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </motion.div>
           </motion.div>
@@ -348,45 +352,45 @@ const HeroSection: React.FC = () => {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-5xl mx-auto mb-16"
+            className="mx-auto mb-16 max-w-5xl"
           >
-            <div className="relative rounded-2xl overflow-hidden border border-gray-800/60 bg-[#111] shadow-2xl shadow-black/50">
+            <div className="relative overflow-hidden rounded-2xl border border-gray-800/60 bg-[#111] shadow-2xl shadow-black/50">
               {/* Browser Chrome */}
-              <div className="flex items-center px-4 py-3 bg-[#0d0d0d] border-b border-gray-800/50">
+              <div className="flex items-center border-b border-gray-800/50 bg-[#0d0d0d] px-4 py-3">
                 <div className="flex space-x-2">
-                  <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
-                  <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
-                  <div className="w-3 h-3 rounded-full bg-[#28C840]" />
+                  <div className="h-3 w-3 rounded-full bg-[#FF5F57]" />
+                  <div className="h-3 w-3 rounded-full bg-[#FEBC2E]" />
+                  <div className="h-3 w-3 rounded-full bg-[#28C840]" />
                 </div>
-                <div className="flex-1 mx-4">
-                  <div className="bg-[#1a1a1a] rounded-lg px-4 py-1.5 text-xs text-gray-500 text-center border border-gray-800/40">
+                <div className="mx-4 flex-1">
+                  <div className="rounded-lg border border-gray-800/40 bg-[#1a1a1a] px-4 py-1.5 text-center text-xs text-gray-500">
                     summarist.ai/dashboard
                   </div>
                 </div>
               </div>
               {/* Video Area */}
-              <div className="relative aspect-video bg-linear-to-br from-[#0d0d0d] via-[#111] to-[#0d0d0d] flex items-center justify-center">
+              <div className="relative flex aspect-video items-center justify-center bg-linear-to-br from-[#0d0d0d] via-[#111] to-[#0d0d0d]">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(12,242,160,0.06),transparent_50%),radial-gradient(circle_at_70%_60%,rgba(147,51,234,0.05),transparent_50%)]" />
                 {/* Play Button */}
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  className="relative z-10 w-20 h-20 rounded-full bg-[#0CF2A0]/10 border-2 border-[#0CF2A0]/30 flex items-center justify-center backdrop-blur-sm group cursor-pointer"
+                  className="group relative z-10 flex h-20 w-20 cursor-pointer items-center justify-center rounded-full border-2 border-[#0CF2A0]/30 bg-[#0CF2A0]/10 backdrop-blur-sm"
                 >
-                  <div className="w-0 h-0 border-l-18 border-l-[#0CF2A0] border-t-11 border-t-transparent border-b-11 border-b-transparent ml-1.5 group-hover:border-l-white transition-colors" />
+                  <div className="ml-1.5 h-0 w-0 border-t-11 border-b-11 border-l-18 border-t-transparent border-b-transparent border-l-[#0CF2A0] transition-colors group-hover:border-l-white" />
                 </motion.button>
                 {/* Decorative Elements */}
                 <div className="absolute bottom-6 left-6 text-xs text-gray-600">
-                  <span className="text-[#0CF2A0]/60 font-medium">00:00</span> /
+                  <span className="font-medium text-[#0CF2A0]/60">00:00</span> /
                   02:34
                 </div>
-                <div className="absolute bottom-6 right-6 flex gap-3">
-                  <div className="w-5 h-5 rounded bg-white/5 border border-gray-700/50" />
-                  <div className="w-5 h-5 rounded bg-white/5 border border-gray-700/50" />
+                <div className="absolute right-6 bottom-6 flex gap-3">
+                  <div className="h-5 w-5 rounded border border-gray-700/50 bg-white/5" />
+                  <div className="h-5 w-5 rounded border border-gray-700/50 bg-white/5" />
                 </div>
                 {/* Progress Bar */}
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-800/50">
-                  <div className="h-full w-0 bg-[#0CF2A0]/60 rounded-r" />
+                <div className="absolute right-0 bottom-0 left-0 h-1 bg-gray-800/50">
+                  <div className="h-full w-0 rounded-r bg-[#0CF2A0]/60" />
                 </div>
               </div>
             </div>

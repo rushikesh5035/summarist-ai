@@ -1,10 +1,13 @@
 "use client";
 
 import React from "react";
-import { Twitter, Linkedin, Github, Mail } from "lucide-react";
-import { cn } from "@/lib/utils";
+
 import Link from "next/link";
+
+import { Github, Linkedin, Mail, Twitter } from "lucide-react";
 import { motion } from "motion/react";
+
+import { cn } from "@/lib/utils";
 
 interface FooterLink {
   label: string;
@@ -39,11 +42,11 @@ export const AnimatedFooter = ({
     <footer
       className={cn(
         "relative w-full overflow-hidden bg-[#0a0a0a] pt-16 pb-0",
-        className,
+        className
       )}
     >
       <div className="relative z-10">
-        <div className="max-w-6xl mx-auto px-6 md:px-10 lg:px-16">
+        <div className="mx-auto max-w-6xl px-6 md:px-10 lg:px-16">
           <div className="flex flex-col items-center text-center">
             {/* Brand */}
             <motion.div
@@ -53,15 +56,15 @@ export const AnimatedFooter = ({
               transition={{ duration: 0.5 }}
               className="mb-6 max-w-md"
             >
-              <div className="flex items-center justify-center gap-2.5 mb-4">
-                <div className="w-10 h-10 bg-linear-to-br from-[#0CF2A0] to-[#0CF2A0]/50 rounded-xl flex items-center justify-center shadow-lg shadow-[#0CF2A0]/10">
+              <div className="mb-4 flex items-center justify-center gap-2.5">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-[#0CF2A0] to-[#0CF2A0]/50 shadow-lg shadow-[#0CF2A0]/10">
                   {brandIcon}
                 </div>
-                <span className="text-2xl font-bold text-white tracking-tight">
+                <span className="text-2xl font-bold tracking-tight text-white">
                   {brandName}
                 </span>
               </div>
-              <p className="text-gray-500 leading-relaxed">
+              <p className="leading-relaxed text-gray-500">
                 {brandDescription}
               </p>
             </motion.div>
@@ -73,7 +76,7 @@ export const AnimatedFooter = ({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="flex flex-wrap items-center justify-center gap-x-6 gap-y-9 mb-30"
+                className="mb-30 flex flex-wrap items-center justify-center gap-x-6 gap-y-9"
               >
                 {navLinks.map((link, index) => (
                   <motion.div
@@ -85,7 +88,7 @@ export const AnimatedFooter = ({
                   >
                     <Link
                       href={link.href}
-                      className="text-sm text-gray-500 hover:text-[#0CF2A0] transition-colors duration-200"
+                      className="text-sm text-gray-500 transition-colors duration-200 hover:text-[#0CF2A0]"
                     >
                       {link.label}
                     </Link>
@@ -100,16 +103,16 @@ export const AnimatedFooter = ({
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="border-t border-white/6 py-6 flex flex-col sm:flex-row justify-between items-center gap-3"
+            className="flex flex-col items-center justify-between gap-3 border-t border-white/6 py-6 sm:flex-row"
           >
-            <p className="text-gray-600 text-sm">
+            <p className="text-sm text-gray-600">
               © {new Date().getFullYear()} {brandName}. All rights reserved.
             </p>
             <Link
               href={"https://github.com/rushikesh5035/summarist-ai"}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-600 hover:text-[#0CF2A0] text-sm transition-colors"
+              className="text-sm text-gray-600 transition-colors hover:text-[#0CF2A0]"
             >
               Crafted by <span className="font-bold">Rushikesh</span>
             </Link>
@@ -123,9 +126,9 @@ export const AnimatedFooter = ({
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="absolute bottom-12 left-0 right-0 flex justify-center pointer-events-none select-none overflow-hidden"
+        className="pointer-events-none absolute right-0 bottom-12 left-0 flex justify-center overflow-hidden select-none"
       >
-        <span className="text-[12vw] md:text-[10vw] font-black text-white/2 tracking-tighter leading-none whitespace-nowrap">
+        <span className="text-[12vw] leading-none font-black tracking-tighter whitespace-nowrap text-white/2 md:text-[10vw]">
           {brandName.toUpperCase()}
         </span>
       </motion.div>
@@ -142,7 +145,7 @@ export const AnimatedFooter = ({
       </motion.div>
 
       {/* Bottom shadow */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[60%] h-16 bg-[#0CF2A0]/4 blur-3xl rounded-full pointer-events-none" />
+      <div className="pointer-events-none absolute bottom-0 left-1/2 h-16 w-[60%] -translate-x-1/2 rounded-full bg-[#0CF2A0]/4 blur-3xl" />
     </footer>
   );
 };

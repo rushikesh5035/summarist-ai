@@ -1,26 +1,27 @@
 "use client";
 
-import { Twitter, Linkedin, Github, Mail } from "lucide-react";
+import { Github, Linkedin, Mail, Twitter } from "lucide-react";
+
 import { AnimatedFooter } from "../common/AnimatedFooter";
 
 const socialLinks = [
   {
-    icon: <Twitter className="w-5 h-5" />,
+    icon: <Twitter className="h-5 w-5" />,
     href: "https://twitter.com",
     label: "Twitter",
   },
   {
-    icon: <Linkedin className="w-5 h-5" />,
+    icon: <Linkedin className="h-5 w-5" />,
     href: "https://linkedin.com",
     label: "LinkedIn",
   },
   {
-    icon: <Github className="w-5 h-5" />,
+    icon: <Github className="h-5 w-5" />,
     href: "https://github.com",
     label: "GitHub",
   },
   {
-    icon: <Mail className="w-5 h-5" />,
+    icon: <Mail className="h-5 w-5" />,
     href: "mailto:hello@summarist.ai",
     label: "Email",
   },

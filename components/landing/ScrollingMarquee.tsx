@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+
 import { motion } from "motion/react";
 
 // ── Marquee Component ──
@@ -42,16 +43,16 @@ const ScrollingMarquee = () => {
       transition={{ duration: 0.6, delay: 1 }}
       className="mb-8"
     >
-      <p className="text-center text-xs uppercase text-gray-600 tracking-[0.2em] mb-4 font-medium">
+      <p className="mb-4 text-center text-xs font-medium tracking-[0.2em] text-gray-600 uppercase">
         Works with every PDF type
       </p>
       <Marquee speed={40}>
         {marqueeItems.map((item) => (
           <span
             key={item}
-            className="inline-flex items-center gap-2 text-sm text-gray-500 font-medium"
+            className="inline-flex items-center gap-2 text-sm font-medium text-gray-500"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0CF2A0]/40" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#0CF2A0]/40" />
             {item}
           </span>
         ))}

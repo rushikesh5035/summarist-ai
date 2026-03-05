@@ -1,17 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
-import ProgressBar from "@/components/summaries/ProgressBar";
-import { parseSection } from "@/utils/summary-helpers";
+
+import { motion } from "motion/react";
+
 import ContentSection from "@/components/summaries/ContentSection";
 import { NavigationControls } from "@/components/summaries/NavigationControls";
-import { MotionDiv } from "@/components/common/motion-wrapper";
+import ProgressBar from "@/components/summaries/ProgressBar";
+import { Card } from "@/components/ui/card";
+import { parseSection } from "@/utils/summary-helpers";
 
 const SectionTitle = ({ title }: { title: string }) => {
   return (
-    <div className="flex flex-col gap-2 mb-4 sticky top-0 pt-4 pb-4 bg-background/80 backdrop-blur-xs z-10">
-      <h2 className="text-2xl lg:text-3xl font-bold text-center flex items-center justify-center gap-2">
+    <div className="bg-background/80 sticky top-0 z-10 mb-4 flex flex-col gap-2 pt-4 pb-4 backdrop-blur-xs">
+      <h2 className="flex items-center justify-center gap-2 text-center text-2xl font-bold lg:text-3xl">
         {title}
       </h2>
     </div>
@@ -34,23 +36,15 @@ const SummaryViewer = ({ summary }: { summary: string }) => {
     setCurrentSection((prev) => Math.max(prev - 1, 0));
 
   return (
-    <Card
-      className="relative px-2
-    h-[500px] sm:h-[600px] lg:h-[500px]
-    w-full xl:w-[8500px]
-    overflow-hidden
-    bg-linear-to-br from-background via-background/95 to-rose-500/5
-    backdrop-blur-lg shadow-2xl rounded-3xl
-    border border-rose-500/10"
-    >
+    <Card className="from-background via-background/95 relative h-125 w-full overflow-hidden rounded-3xl border border-rose-500/10 bg-linear-to-br to-rose-500/5 px-2 shadow-2xl backdrop-blur-lg sm:h-150 lg:h-125 xl:w-2125">
       <ProgressBar sections={sections} currentSection={currentSection} />
-      <MotionDiv
+      <motion.div
         key={currentSection}
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.2, ease: "easeInOut" }}
         exit={{ opacity: 0 }}
-        className="h-full overflow-y-auto scrollbar-hide pt-12 sm:pt-16 pb-20 sm:pb-24"
+        className="scrollbar-hide h-full overflow-y-auto pt-12 pb-20 sm:pt-16 sm:pb-24"
       >
         <div className="px-4 sm:px-6">
           <SectionTitle title={sections[currentSection]?.title || ""} />
@@ -59,7 +53,7 @@ const SummaryViewer = ({ summary }: { summary: string }) => {
             points={sections[currentSection]?.points || []}
           />
         </div>
-      </MotionDiv>
+      </motion.div>
 
       <NavigationControls
         currentSection={currentSection}

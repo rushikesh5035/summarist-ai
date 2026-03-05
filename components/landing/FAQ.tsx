@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+
 import {
   Accordion,
   AccordionContent,
@@ -11,11 +12,11 @@ import { faqs } from "@/data/faqs";
 
 const FAQ = () => {
   return (
-    <section className="py-24 bg-[#0a0a0a] relative" id="faq">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-150 h-75 bg-[#0CF2A0]/3 rounded-full blur-[120px] pointer-events-none" />
+    <section className="relative bg-[#0a0a0a] py-24" id="faq">
+      <div className="pointer-events-none absolute top-0 left-1/2 h-75 w-150 -translate-x-1/2 rounded-full bg-[#0CF2A0]/3 blur-[120px]" />
 
-      <div className="max-w-5xl mx-auto px-6 md:px-10 relative z-10">
-        <div className="grid md:grid-cols-2 gap-12 md:gap-16">
+      <div className="relative z-10 mx-auto max-w-5xl px-6 md:px-10">
+        <div className="grid gap-12 md:grid-cols-2 md:gap-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -23,13 +24,13 @@ const FAQ = () => {
             viewport={{ once: true }}
             className="md:sticky md:top-24 md:self-start"
           >
-            <span className="text-[#0CF2A0] text-sm font-semibold uppercase tracking-widest mb-4 block">
+            <span className="mb-4 block text-sm font-semibold tracking-widest text-[#0CF2A0] uppercase">
               FAQs
             </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">
+            <h2 className="mb-4 text-4xl font-bold tracking-tight text-white md:text-5xl">
               Your questions answered
             </h2>
-            <p className="text-gray-400 text-lg leading-relaxed">
+            <p className="text-lg leading-relaxed text-gray-400">
               Everything you need to know about Summarist.
             </p>
           </motion.div>
@@ -47,10 +48,10 @@ const FAQ = () => {
                   value={faq.id}
                   className="border-b border-white/8 py-1"
                 >
-                  <AccordionTrigger className="text-white text-left font-medium hover:no-underline py-5 text-[15px] hover:text-[#0CF2A0] transition-colors">
+                  <AccordionTrigger className="bg-transparent py-5 text-left text-[15px] font-medium text-white transition-colors hover:text-[#0CF2A0] hover:no-underline">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="text-gray-400 leading-relaxed pb-5 text-sm">
+                  <AccordionContent className="pb-5 text-sm leading-relaxed text-gray-400">
                     {faq.answer}
                   </AccordionContent>
                 </AccordionItem>

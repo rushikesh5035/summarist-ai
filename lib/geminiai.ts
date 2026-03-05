@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+
 import { SUMMARY_SYSTEM_PROMPT } from "@/utils/prompts";
 
 const apiKey = process.env.GEMINI_API_KEY;
@@ -10,7 +11,7 @@ if (!apiKey) {
 const genAI = new GoogleGenerativeAI(apiKey);
 
 export async function generateSummaryFromGemini(
-  pdfText: string,
+  pdfText: string
 ): Promise<string | null> {
   try {
     const model = genAI.getGenerativeModel({

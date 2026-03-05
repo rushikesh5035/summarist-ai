@@ -1,7 +1,8 @@
-import { pricingPlans } from "@/utils/constants";
+import { User } from "@clerk/nextjs/server";
+
 import { getDBConnection } from "@/lib/db";
 import { getUserUploadCount } from "@/lib/summaries";
-import { User } from "@clerk/nextjs/server";
+import { pricingPlans } from "@/utils/constants";
 
 export const getPriceIdForActive = async (email: string) => {
   const sql = await getDBConnection();
@@ -34,7 +35,7 @@ export const hasReachedUploadLimit = async (userId: string) => {
 
 export const getSubscriptionStatus = async (user: User) => {
   const hasSubscription = await hasActivePlan(
-    user.emailAddresses[0].emailAddress,
+    user.emailAddresses[0].emailAddress
   );
 
   return hasSubscription;

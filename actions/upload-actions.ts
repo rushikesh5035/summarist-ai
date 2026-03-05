@@ -1,11 +1,13 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+
+import { auth } from "@clerk/nextjs/server";
+
 import { getDBConnection } from "@/lib/db";
 import { generateSummaryFromGemini } from "@/lib/geminiai";
 import { fetchAndExtractPdfText } from "@/lib/langchain";
 import { formatFileNameAsTitle } from "@/utils/format-utils";
-import { auth } from "@clerk/nextjs/server";
-import { revalidatePath } from "next/cache";
 
 interface PdfSummaryType {
   userId?: string;
@@ -25,7 +27,7 @@ export async function generatePdfSummary(
           name: string;
         };
       };
-    }
+    },
   ]
 ) {
   if (!uploadResponse) {

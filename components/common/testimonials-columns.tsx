@@ -1,4 +1,5 @@
 import React from "react";
+
 import { motion } from "motion/react";
 
 interface Testimonial {
@@ -31,25 +32,25 @@ export const TestimonialsColumn = (props: {
           <React.Fragment key={index}>
             {props.testimonials.map(({ text, image, name, role }, i) => (
               <div
-                className="p-8 rounded-2xl border border-white/6 bg-white/2 backdrop-blur-sm max-w-xs w-full shadow-lg shadow-[#0CF2A0]/3"
+                className="w-full max-w-xs rounded-2xl border border-white/6 bg-white/2 p-8 shadow-lg shadow-[#0CF2A0]/3 backdrop-blur-sm"
                 key={i}
               >
-                <p className="text-gray-300 text-[15px] leading-relaxed">
+                <p className="text-[15px] leading-relaxed text-gray-300">
                   {text}
                 </p>
-                <div className="flex items-center gap-3 mt-5">
+                <div className="mt-5 flex items-center gap-3">
                   <img
                     width={40}
                     height={40}
                     src={image}
                     alt={name}
-                    className="h-10 w-10 rounded-full object-cover border border-white/10"
+                    className="h-10 w-10 rounded-full border border-white/10 object-cover"
                   />
                   <div className="flex flex-col">
-                    <div className="font-medium text-white text-sm tracking-tight leading-5">
+                    <div className="text-sm leading-5 font-medium tracking-tight text-white">
                       {name}
                     </div>
-                    <div className="leading-5 text-gray-500 text-xs tracking-tight">
+                    <div className="text-xs leading-5 tracking-tight text-gray-500">
                       {role}
                     </div>
                   </div>

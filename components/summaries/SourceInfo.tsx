@@ -1,7 +1,9 @@
-import { ExternalLink, FileText } from "lucide-react";
 import React from "react";
-import { Button } from "@/components/ui/button";
+
+import { ExternalLink, FileText } from "lucide-react";
+
 import DownloadSummaryButton from "@/components/summaries/DownloadSummaryButton";
+import { Button } from "@/components/ui/button";
 
 export default function SourceInfo({
   fileName,
@@ -17,7 +19,7 @@ export default function SourceInfo({
   createdAt: string;
 }) {
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+    <div className="text-muted-foreground flex flex-col items-center justify-between gap-4 text-sm lg:flex-row">
       <div className="flex items-center justify-center gap-2">
         <FileText className="h-4 w-4 text-rose-400" />
         <span>Source: {fileName}</span>
@@ -26,11 +28,11 @@ export default function SourceInfo({
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 px-3 text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+          className="h-8 px-3 text-rose-600 hover:bg-rose-50 hover:text-rose-700"
           asChild
         >
           <a href={originalFileUrl} target="_blank" rel="noopener noreferrer">
-            <ExternalLink className="h-4 w-4 mr-1" />
+            <ExternalLink className="mr-1 h-4 w-4" />
             View Original
           </a>
         </Button>

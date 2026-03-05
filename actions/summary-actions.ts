@@ -1,8 +1,10 @@
 "use server";
 
-import { getDBConnection } from "@/lib/db";
-import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+
+import { currentUser } from "@clerk/nextjs/server";
+
+import { getDBConnection } from "@/lib/db";
 
 export async function deleteSummaryAction({
   summaryId,

@@ -1,8 +1,11 @@
+import React from "react";
+
+import { redirect } from "next/navigation";
+
+import { currentUser } from "@clerk/nextjs/server";
+
 import UpgradeRequired from "@/components/common/UpgradeRequired";
 import { hasActivePlan } from "@/lib/user";
-import { currentUser } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
-import React from "react";
 
 export default async function Layout({
   children,
