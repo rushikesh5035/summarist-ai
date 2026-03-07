@@ -42,7 +42,7 @@ export default function SummaryHeader({
           </span>
         </div>
       </div>
-      <div className="flex flex-shrink-0 gap-2">
+      <div className="flex shrink-0 gap-2">
         <Button
           variant="outline"
           size="sm"
