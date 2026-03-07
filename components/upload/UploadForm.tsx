@@ -13,7 +13,6 @@ import {
 } from "@/actions/upload-actions";
 import LoadingSkeleton from "@/components/upload/LoadingSkeleton";
 import UploadFormInput from "@/components/upload/UploadFormInput";
-import { itemVarient } from "@/utils/constants";
 import { useUploadThing } from "@/utils/uploadthing";
 
 const schema = z.object({

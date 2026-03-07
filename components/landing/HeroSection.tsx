@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
+import { useAuth } from "@clerk/nextjs";
 import { motion, type Variants } from "framer-motion";
 import { ArrowRight, ChevronRight, Sparkles } from "lucide-react";
 
@@ -246,6 +247,15 @@ const HeroSection: React.FC = () => {
   };
 
   const router = useRouter();
+  const { isSignedIn } = useAuth();
+
+  const handleGetStarted = () => {
+    if (isSignedIn) {
+      router.push("/dashboard");
+    } else {
+      router.push("/sign-in");
+    }
+  };
 
   return (
     <div className="relative overflow-x-hidden bg-[#0a0a0a] text-gray-300">
@@ -338,7 +348,7 @@ const HeroSection: React.FC = () => {
             <motion.div>
               <Button
                 size="lg"
-                onClick={() => router.push("/pdf-tools")}
+                onClick={handleGetStarted}
                 className="gap-2.5 rounded-xl bg-[#0CF2A0] px-10 text-base font-bold text-[#0a0a0a] shadow-xl shadow-[#0CF2A0]/20 hover:bg-[#0CF2A0]/90"
               >
                 Get Started
