@@ -1,13 +1,37 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 
-import { ArrowRight, Plus } from "lucide-react";
-import { motion } from "motion/react";
+import { useRouter } from "next/navigation";
 
-import EmptySummaryState from "@/components/summaries/EmptySummaryState";
-import SummaryCard from "@/components/summaries/SummaryCard";
-import { Button } from "@/components/ui/button";
+import { AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import {
+  generatePdfSummary,
+  storePdfSummaryAction,
+} from "@/actions/upload-actions";
+import LoadingView from "@/components/dashboard/LoadingView";
+import SummaryPage from "@/components/dashboard/SummaryPage";
+import UploadPage from "@/components/dashboard/UploadPage";
+import { useUploadThing } from "@/utils/uploadthing";
+
+const schema = z.object({
+  file: z
+    .instanceof(File, { message: "Invalid file" })
+    .refine(
+      (file) => file.size <= 32 * 1024 * 1024,
+      "File size must be less than 32MB"
+    )
+    .refine(
+      (file) => file.type.startsWith("application/pdf"),
+      "File must be a PDF"
+    ),
+});
+
+type Mode = "summary" | "chat" | null;
+type View = "upload" | "loading" | "summary" | "chat";
 
 interface DashboardClientProps {
   summaries: any[];
@@ -20,87 +44,146 @@ export default function DashboardClient({
   hasReachedLimit,
   uploadLimit,
 }: DashboardClientProps) {
+  const [file, setFile] = useState<File | null>(null);
+  const [mode, setMode] = useState<Mode>(null);
+  const [view, setView] = useState<View>("upload");
+  const [isDragging, setIsDragging] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const router = useRouter();
+
+  const { startUpload } = useUploadThing("pdfUploader", {
+    onClientUploadComplete: () => {
+      console.log("upload successfully!");
+    },
+    onUploadError: (err) => {
+      toast("error occurred while uploading", {
+        description: err.message,
+      });
+    },
+    onUploadBegin: (file) => {
+      console.log("upload has begun for", file);
+    },
+  });
+
+  const handleSubmit = async () => {
+    if (!file || !mode) return;
+
+    if (mode === "summary") {
+      // Validate file before uploading
+      const validatedFields = schema.safeParse({ file });
+      if (!validatedFields.success) {
+        const errorMessage =
+          validatedFields.error.flatten().fieldErrors.file?.[0] ??
+          "Invalid file";
+        toast("❌ Something went wrong", { description: errorMessage });
+        return;
+      }
+
+      setView("loading");
+
+      try {
+        toast("📄 Uploading PDF", {
+          description: "We are uploading your PDF!",
+        });
+
+        // Upload file to UploadThing
+        const resp = await startUpload([file]);
+        if (!resp) {
+          toast("❌ Something went wrong", {
+            description: "Please use a different file",
+          });
+          setView("upload");
+          return;
+        }
+
+        toast("📄 Processing PDF", {
+          description: "Our AI is reading through your document! ✨",
+        });
+
+        // Parse PDF and generate summary with AI
+        const result = await generatePdfSummary([
+          {
+            serverData: {
+              userId: resp[0].serverData.userId,
+              file: {
+                ufsUrl: resp[0].serverData.file.ufsUrl,
+                name: resp[0].serverData.file.name,
+              },
+            },
+          },
+        ]);
+
+        const { data = null, message = null } = result || {};
+
+        if (data?.summary) {
+          toast("📄 Saving PDF...", {
+            description: "We are saving your summary! ✨",
+          });
+
+          // Save summary to the database
+          const storeResult = await storePdfSummaryAction({
+            summary: data.summary,
+            fileUrl: resp[0].serverData.file.ufsUrl,
+            title: data.title,
+            fileName: file.name,
+          });
+
+          toast("✨ Summary Generated!", {
+            description: "Your PDF has been successfully summarized and saved",
+          });
+
+          // Redirect to the summary page
+          if (storeResult.data) {
+            router.push(`/summaries/${storeResult.data.id}`);
+          }
+        } else {
+          toast("❌ Something went wrong", {
+            description: message || "Failed to generate summary.",
+          });
+          setView("upload");
+        }
+      } catch (error) {
+        console.error("Error occurred", error);
+        toast("❌ Something went wrong", {
+          description: "An unexpected error occurred. Please try again.",
+        });
+        setView("upload");
+      }
+    } else if (mode === "chat") {
+      setView("chat");
+    }
+  };
+
   return (
-    <main className="min-h-screen">
-      <div className="container mx-auto flex flex-col gap-4">
-        <div className="px-2 py-12 sm:py-16">
-          <div className="mb-8 flex justify-between gap-4">
-            <div className="flex flex-col gap-2">
-              <motion.h1
-                initial="hidden"
-                whileInView="visible"
-                className="bg-linear-to-r from-gray-600 to-gray-900 bg-clip-text text-4xl font-bold tracking-tight text-transparent"
-              >
-                Your Summaries
-              </motion.h1>
-              <motion.p
-                initial="hidden"
-                animate="visible"
-                className="text-gray-600"
-              >
-                Transform your PDFs into concise, actionable insights
-              </motion.p>
-            </div>
-
-            {!hasReachedLimit && (
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                whileHover={{ scale: 1.05 }}
-              >
-                <Button
-                  variant={"link"}
-                  className="group bg-linear-to-r from-rose-500 to-rose-700 transition-all duration-300 hover:scale-105 hover:from-rose-600 hover:to-rose-800 hover:no-underline"
-                >
-                  <Link href="/upload" className="flex items-center text-white">
-                    <Plus className="mr-2 h-5 w-5" />
-                    New Summary
-                  </Link>
-                </Button>
-              </motion.div>
+    <div className="relative mt-20 min-h-screen overflow-hidden bg-[#111111] text-gray-300">
+      <main className="relative z-10 mx-auto max-w-5xl px-6 pt-8 pb-20">
+        <AnimatePresence mode="wait">
+          <>
+            {view === "upload" && (
+              <UploadPage
+                key="upload"
+                file={file}
+                mode={mode}
+                isDragging={isDragging}
+                onFileSelect={setFile}
+                onModeChange={setMode}
+                onDragStateChange={setIsDragging}
+                onSubmit={handleSubmit}
+                hasReachedLimit={hasReachedLimit}
+                uploadLimit={uploadLimit}
+              />
             )}
-          </div>
-
-          {hasReachedLimit && (
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              whileHover={{ scale: 1.05 }}
-              className="mb-6"
-            >
-              <div className="rounded-md border border-rose-200 bg-rose-50 p-4 text-rose-800">
-                <p className="text-sm">
-                  You've reached the limit of {uploadLimit} upload on the Basic
-                  plan.{" "}
-                  <Link
-                    href="/#pricing"
-                    className="inline-flex items-center font-medium text-rose-800 underline underline-offset-4"
-                  >
-                    Click here to upgrade to Pro{" "}
-                    <ArrowRight className="inline-block h-4 w-4" />
-                  </Link>{" "}
-                  for unlimited uploads.
-                </p>
-              </div>
-            </motion.div>
-          )}
-
-          {summaries.length === 0 ? (
-            <EmptySummaryState />
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="grid grid-cols-1 gap-4 sm:gap-6 sm:px-0 md:grid-cols-2 lg:grid-cols-3"
-            >
-              {summaries.map((summary, index) => (
-                <SummaryCard key={index} summary={summary} />
-              ))}
-            </motion.div>
-          )}
-        </div>
-      </div>
-    </main>
+            {view === "loading" && (
+              <LoadingView
+                key="loading"
+                fileName={file?.name || ""}
+                onComplete={() => {}}
+              />
+            )}
+          </>
+        </AnimatePresence>
+      </main>
+    </div>
   );
 }

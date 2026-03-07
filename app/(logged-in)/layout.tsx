@@ -7,6 +7,8 @@ import { currentUser } from "@clerk/nextjs/server";
 import UpgradeRequired from "@/components/common/UpgradeRequired";
 import { hasActivePlan } from "@/lib/user";
 
+import Navbar from "./dashboard/Navbar";
+
 export default async function Layout({
   children,
 }: {
@@ -18,13 +20,20 @@ export default async function Layout({
     redirect("/sign-in");
   }
 
-  const hasActiveSubscription = await hasActivePlan(
-    user.emailAddresses[0].emailAddress
+  // const hasActiveSubscription = await hasActivePlan(
+  //   user.emailAddresses[0].emailAddress
+  // );
+
+  // if (!hasActiveSubscription) {
+  //   return <UpgradeRequired />;
+  // }
+
+  return (
+    <>
+      <div className="relative min-h-screen overflow-hidden bg-[#111111] text-gray-300">
+        <Navbar />
+        {children}
+      </div>
+    </>
   );
-
-  if (!hasActiveSubscription) {
-    return <UpgradeRequired />;
-  }
-
-  return <>{children}</>;
 }
