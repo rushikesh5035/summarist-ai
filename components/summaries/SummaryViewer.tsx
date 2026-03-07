@@ -1,68 +1,111 @@
 "use client";
 
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 
-import ContentSection from "@/components/summaries/ContentSection";
-import { NavigationControls } from "@/components/summaries/NavigationControls";
-import ProgressBar from "@/components/summaries/ProgressBar";
-import { Card } from "@/components/ui/card";
-import { parseSection } from "@/utils/summary-helpers";
+import {
+  exportAsDoc,
+  exportAsMarkdown,
+  exportAsTxt,
+} from "@/utils/export-summary";
+import { parseSummaryText } from "@/utils/parse-summary";
 
-const SectionTitle = ({ title }: { title: string }) => {
-  return (
-    <div className="bg-background/80 sticky top-0 z-10 mb-4 flex flex-col gap-2 pt-4 pb-4 backdrop-blur-xs">
-      <h2 className="flex items-center justify-center gap-2 text-center text-2xl font-bold lg:text-3xl">
-        {title}
-      </h2>
-    </div>
+import ScrollToTopButton from "./ScrollToTopButton";
+import SummaryActionItemsPanel from "./SummaryActionItemsPanel";
+import SummaryCollapsibleSections from "./SummaryCollapsibleSections";
+import SummaryKeyPointsPanel from "./SummaryKeyPointsPanel";
+import SummaryOverviewPanel from "./SummaryOverviewPanel";
+import SummaryViewHeading from "./SummaryViewHeading";
+
+interface SummaryViewerProps {
+  summary: string;
+  fileName: string;
+  wordCount: number;
+  createdAt: string;
+}
+
+const SummaryViewer = ({
+  summary,
+  fileName,
+  wordCount,
+  createdAt,
+}: SummaryViewerProps) => {
+  const parsed = parseSummaryText(summary, wordCount);
+
+  const [expandedSections, setExpandedSections] = useState<Set<number>>(
+    new Set([0])
   );
-};
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-const SummaryViewer = ({ summary }: { summary: string }) => {
-  const [currentSection, setCurrentSection] = useState(0);
+  const toggleSection = (index: number) => {
+    setExpandedSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+  };
 
-  const sections = summary
-    .split("\n#")
-    .map((section) => section.trim())
-    .filter(Boolean)
-    .map(parseSection);
+  const expandAll = () =>
+    setExpandedSections(new Set(parsed.sections.map((_, i) => i)));
+  const collapseAll = () => setExpandedSections(new Set());
 
-  const handleNext = () =>
-    setCurrentSection((prev) => Math.min(prev + 1, sections.length - 1));
-  // Corrected: Use Math.max for handlePrevious
-  const handlePrevious = () =>
-    setCurrentSection((prev) => Math.max(prev - 1, 0));
+  useEffect(() => {
+    const handleScroll = () => setShowScrollTop(window.scrollY > 400);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleCopy = () => {
+    const text = [parsed.title, parsed.overview, parsed.keyPoints.join("\n")]
+      .filter(Boolean)
+      .join("\n\n");
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleExportTxt = () => exportAsTxt(parsed, fileName, createdAt);
+  const handleExportMarkdown = () =>
+    exportAsMarkdown(parsed, fileName, createdAt);
+  const handleExportDoc = () => exportAsDoc(parsed, fileName, createdAt);
 
   return (
-    <Card className="from-background via-background/95 relative h-125 w-full overflow-hidden rounded-3xl border border-rose-500/10 bg-linear-to-br to-rose-500/5 px-2 shadow-2xl backdrop-blur-lg sm:h-150 lg:h-125 xl:w-2125">
-      <ProgressBar sections={sections} currentSection={currentSection} />
-      <motion.div
-        key={currentSection}
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.2, ease: "easeInOut" }}
-        exit={{ opacity: 0 }}
-        className="scrollbar-hide h-full overflow-y-auto pt-12 pb-20 sm:pt-16 sm:pb-24"
-      >
-        <div className="px-4 sm:px-6">
-          <SectionTitle title={sections[currentSection]?.title || ""} />
-          <ContentSection
-            title={sections[currentSection]?.title || ""}
-            points={sections[currentSection]?.points || []}
-          />
-        </div>
-      </motion.div>
-
-      <NavigationControls
-        currentSection={currentSection}
-        totalSections={sections.length}
-        onPrevious={handlePrevious}
-        onNext={handleNext}
-        onSectionSelect={setCurrentSection}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <SummaryViewHeading
+        title={parsed.title}
+        readTime={parsed.readTime}
+        fileName={fileName}
+        sectionCount={parsed.sections.length}
+        copied={copied}
+        onCopy={handleCopy}
+        onExportTxt={handleExportTxt}
+        onExportMarkdown={handleExportMarkdown}
+        onExportDoc={handleExportDoc}
       />
-    </Card>
+
+      <SummaryOverviewPanel overview={parsed.overview} />
+
+      <SummaryKeyPointsPanel keyPoints={parsed.keyPoints} />
+
+      <SummaryCollapsibleSections
+        sections={parsed.sections}
+        expandedSections={expandedSections}
+        onToggle={toggleSection}
+        onExpandAll={expandAll}
+        onCollapseAll={collapseAll}
+      />
+
+      <SummaryActionItemsPanel actionItems={parsed.actionItems} />
+
+      <ScrollToTopButton show={showScrollTop} />
+    </motion.div>
   );
 };
 
