@@ -15,20 +15,28 @@ export async function generateSummaryFromGemini(
 ): Promise<string | null> {
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash-latest",
+      model: "gemini-2.5-flash",
     });
 
-    const fullPrompt = `${SUMMARY_SYSTEM_PROMPT}\n\nDocument:\n\n${pdfText}\n\nTransform this document into an engaging, easy-to-read summary with contextually relevant emojis and proper markdown formatting based on the provided template.`;
+    const fullPrompt = `${SUMMARY_SYSTEM_PROMPT}\n\nDocument:\n\n${pdfText}`;
 
     console.log("Sending structured prompt to Gemini...");
 
     const result = await model.generateContent(fullPrompt);
     const response = await result.response;
-    const summary = response.text();
+    const raw = response.text();
 
-    if (!summary) {
+    if (!raw) {
       throw new Error("Empty response from Gemini API");
     }
+
+    // Strip markdown code fences if the model wraps the JSON
+    const summary = raw
+      .replace(/^```(?:json)?\s*/i, "")
+      .replace(/\s*```\s*$/i, "")
+      .trim();
+
+    // console.log(summary);
     return summary;
   } catch (error: any) {
     console.log(error.message);

@@ -75,13 +75,20 @@ export async function generatePdfSummary(
       };
     }
 
-    const formattedFileName = formatFileNameAsTitle(fileName);
+    // Try to extract the AI-generated title from the JSON response
+    let title = formatFileNameAsTitle(fileName);
+    try {
+      const parsed = JSON.parse(summary);
+      if (parsed?.title) title = parsed.title;
+    } catch {
+      // keep the file-name-based title as fallback
+    }
 
     return {
       success: true,
       message: "PDF summarized successfully!",
       data: {
-        title: formattedFileName,
+        title,
         summary,
       },
     };
