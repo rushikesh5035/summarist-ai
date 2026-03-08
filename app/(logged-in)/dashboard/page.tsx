@@ -19,11 +19,13 @@ const Dashboard = async () => {
   const summaries = await getSummaries(user?.id);
 
   return (
-    <DashboardClient
-      summaries={summaries}
-      hasReachedLimit={hasReachedLimit}
-      uploadLimit={uploadLimit}
-    />
+    <>
+      <DashboardClient
+        summaries={summaries}
+        hasReachedLimit={hasReachedLimit}
+        uploadLimit={uploadLimit}
+      />
+    </>
   );
 };
 

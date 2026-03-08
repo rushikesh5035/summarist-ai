@@ -13,7 +13,6 @@ import {
   storePdfSummaryAction,
 } from "@/actions/upload-actions";
 import LoadingView from "@/components/dashboard/LoadingView";
-import SummaryPage from "@/components/dashboard/SummaryPage";
 import UploadPage from "@/components/dashboard/UploadPage";
 import { useUploadThing } from "@/utils/uploadthing";
 

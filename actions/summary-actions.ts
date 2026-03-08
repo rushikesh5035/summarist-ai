@@ -24,7 +24,7 @@ export async function deleteSummaryAction({
       await sql`DELETE FROM pdf_summaries WHERE id=${summaryId} AND user_id=${userId} RETURNING id`;
 
     if (result.length > 0) {
-      revalidatePath("/dashboard");
+      revalidatePath("/vault");
       return { success: true };
     }
     return { success: false };

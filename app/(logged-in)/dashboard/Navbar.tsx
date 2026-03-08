@@ -127,7 +127,7 @@ const Navbar = () => {
         {/* NavMenu */}
         <div className="flex grow items-center justify-center space-x-4 px-2 text-xs sm:space-x-8 sm:px-4 sm:text-sm">
           <NavLink href="/dashboard">Upload a PDF</NavLink>
-          <NavLink href="/history">My Library</NavLink>
+          <NavLink href="/vault">My Vault</NavLink>
         </div>
 
         <div className="flex shrink-0 items-center gap-4">
