@@ -1,13 +1,20 @@
 "use client";
 
-import { type MouseEvent as ReactMouseEvent, ReactNode, useState } from "react";
+import {
+  type MouseEvent as ReactMouseEvent,
+  ReactNode,
+  useEffect,
+  useState,
+} from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
+import { Zap } from "lucide-react";
 import { motion, useMotionValueEvent, useScroll, Variants } from "motion/react";
 
+import { getUserCredits } from "@/actions/credits-actions";
 import { cn } from "@/lib/utils";
 
 import { Button } from "../ui/button";
@@ -47,8 +54,23 @@ const NavLink: React.FC<NavLinkProps> = ({
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [credits, setCredits] = useState<{
+    remaining: number;
+    uploadLimit: number;
+    planId: string;
+    planName: string;
+    isUnlimited: boolean;
+  } | null>(null);
   const router = useRouter();
-  const { isLoaded, isSignedIn } = useUser();
+  const { isLoaded } = useUser();
+
+  useEffect(() => {
+    getUserCredits().then(setCredits);
+
+    const handleFocus = () => getUserCredits().then(setCredits);
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+  }, []);
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -138,6 +160,22 @@ const Navbar = () => {
           ) : (
             <>
               <SignedIn>
+                {credits && (
+                  <div
+                    className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${
+                      credits.isUnlimited
+                        ? "border-[#0CF2A0]/30 bg-[#0CF2A0]/10 text-[#0CF2A0]"
+                        : credits.remaining === 0
+                          ? "border-red-500/30 bg-red-500/10 text-red-400"
+                          : "border-gray-700 bg-white/5 text-gray-300"
+                    }`}
+                  >
+                    <Zap className="h-3 w-3" />
+                    {credits.isUnlimited
+                      ? `${credits.planName} (∞ credits)`
+                      : `${credits.planName} plan (${credits.remaining}/${credits.uploadLimit} credits)`}
+                  </div>
+                )}
                 <UserButton />
               </SignedIn>
               <SignedOut>
