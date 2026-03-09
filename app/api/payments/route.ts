@@ -7,14 +7,14 @@ import {
   handleSubscriptionDeleted,
 } from "@/lib/payments";
 
-const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export const POST = async (req: NextRequest) => {
   const payload = await req.text();
   const signature = req.headers.get("stripe-signature");
 
   let event;
-  const endpointSecret = process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET!;
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
   try {
     event = stripe.webhooks.constructEvent(payload, signature!, endpointSecret);
