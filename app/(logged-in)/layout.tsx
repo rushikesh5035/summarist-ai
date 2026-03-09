@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs/server";
 
 import UpgradeRequired from "@/components/common/UpgradeRequired";
-import { hasActivePlan } from "@/lib/user";
+import { ensureFreeUserExists, hasActivePlan } from "@/lib/user";
 
 import Navbar from "./dashboard/Navbar";
 
@@ -16,9 +16,10 @@ export default async function Layout({
 }) {
   const user = await currentUser();
 
-  if (!user) {
-    redirect("/sign-in");
-  }
+  if (!user) redirect("/sign-in");
+
+  // Ensure every new sign-up (free plan) gets a DB row on first login
+  await ensureFreeUserExists(user);
 
   // const hasActiveSubscription = await hasActivePlan(
   //   user.emailAddresses[0].emailAddress

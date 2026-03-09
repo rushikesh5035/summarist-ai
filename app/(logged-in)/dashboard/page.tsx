@@ -1,5 +1,3 @@
-import React from "react";
-
 import { redirect } from "next/navigation";
 
 import { currentUser } from "@clerk/nextjs/server";
@@ -14,7 +12,8 @@ const Dashboard = async () => {
   if (!user?.id) return redirect("/sign-in");
 
   const { hasReachedLimit, uploadLimit } = await hasReachedUploadLimit(
-    user?.id
+    user.id,
+    user.emailAddresses[0].emailAddress
   );
   const summaries = await getSummaries(user?.id);
 
