@@ -1,22 +1,82 @@
 "use client";
 
-import { ArrowRight, Check } from "lucide-react";
-import { motion } from "motion/react";
+import { useEffect, useState } from "react";
 
+import Link from "next/link";
+
+import { ArrowRight, Check, Loader2 } from "lucide-react";
+import { motion } from "motion/react";
+import { toast } from "sonner";
+
+import { getUserCredits } from "@/actions/credits-actions";
 import { Button } from "@/components/ui/button";
-import { plans } from "@/data/PricingPlans";
+import { plans } from "@/utils/PricingPlans";
+
+const planRank: Record<string, number> = { free: 0, pro: 1, unlimited: 2 };
 
 const Pricing = () => {
+  const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
+  const [userPlanId, setUserPlanId] = useState<string | null>(null);
+
+  useEffect(() => {
+    getUserCredits().then((c) => {
+      if (c) setUserPlanId(c.planId);
+    });
+  }, []);
+
+  const handleCheckout = async (
+    planId: string,
+    planName: string,
+    priceId: string
+  ) => {
+    // Guard: already on this plan or a higher one
+    if (userPlanId) {
+      const currentRank = planRank[userPlanId] ?? 0;
+      const targetRank = planRank[planId] ?? 0;
+
+      if (currentRank === targetRank) {
+        const suffix =
+          planId === "pro"
+            ? " If you want more, select the Unlimited plan."
+            : "";
+        toast.info(
+          `You're already subscribed to the ${planName} plan.${suffix}`
+        );
+        return;
+      }
+
+      if (currentRank > targetRank) {
+        toast.info(
+          "You're already on a higher plan. To downgrade, cancel your current subscription first."
+        );
+        return;
+      }
+    }
+
+    // Create a Stripe Checkout Session and redirect to it
+    setLoadingPlanId(planId);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priceId }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        toast.error("Could not start checkout. Please try again.");
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+      toast.error("Could not start checkout. Please try again.");
+    } finally {
+      setLoadingPlanId(null);
+    }
+  };
+
   return (
     <section className="relative bg-[#0a0a0a] py-24" id="pricing">
-      {/* <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 60% 40% at 50% 0%, rgba(12, 242, 160, 0.04) 0%, transparent 60%)",
-        }}
-      /> */}
-
       <div className="relative z-10 mx-auto max-w-6xl px-6 md:px-10 lg:px-16">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -81,16 +141,35 @@ const Pricing = () => {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
               >
-                <Button
-                  className={`w-full gap-2 rounded-xl py-5 text-sm font-bold ${
-                    plan.accent
-                      ? "bg-[#0CF2A0] text-[#0a0a0a] shadow-lg shadow-[#0CF2A0]/20 hover:bg-[#0CF2A0]/90"
-                      : "border border-gray-700 bg-white/5 text-white hover:bg-white/10"
-                  }`}
-                >
-                  {plan.buttonText}
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
+                {plan.priceId ? (
+                  <Button
+                    onClick={() =>
+                      handleCheckout(plan.id, plan.name, plan.priceId!)
+                    }
+                    disabled={loadingPlanId === plan.id}
+                    className={`w-full gap-2 rounded-xl py-5 text-sm font-bold ${
+                      plan.accent
+                        ? "bg-[#0CF2A0] text-[#0a0a0a] shadow-lg shadow-[#0CF2A0]/20 hover:bg-[#0CF2A0]/90"
+                        : "border border-gray-700 bg-white/5 text-white hover:bg-white/10"
+                    }`}
+                  >
+                    {loadingPlanId === plan.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <>
+                        {plan.buttonText}
+                        <ArrowRight className="h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+                ) : (
+                  <Link href="/sign-up">
+                    <Button className="w-full gap-2 rounded-xl border border-gray-700 bg-white/5 py-5 text-sm font-bold text-white hover:bg-white/10">
+                      {plan.buttonText}
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                )}
               </motion.div>
 
               <div className="mt-8 space-y-3.5">
