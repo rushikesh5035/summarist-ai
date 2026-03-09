@@ -2,6 +2,7 @@ import Stripe from "stripe";
 
 import { getDBConnection } from "@/lib/db";
 
+// Handle Stripe checkout session completion
 export const handleCheckoutSessionCompleted = async ({
   session,
   stripe,
@@ -34,6 +35,7 @@ export const handleCheckoutSessionCompleted = async ({
   }
 };
 
+// Handle Stripe subscription deletion (cancellation)
 export const handleSubscriptionDeleted = async ({
   subscriptionId,
   stripe,
@@ -51,11 +53,11 @@ export const handleSubscriptionDeleted = async ({
 
     console.log("subscription cancelled successfully");
   } catch (error) {
-    console.error("Errror handling subscription deleted", error);
+    console.error("Err  or handling subscription deleted", error);
   }
 };
 
-// create or update user in DB
+// Create or update user in DB based on Stripe customer info
 async function createOrUpdateUser({
   email,
   fullName,
@@ -75,13 +77,19 @@ async function createOrUpdateUser({
 
     if (user.length === 0) {
       await sql`INSERT INTO users (email, full_name, customer_id, price_id, status) VALUES (${email},${fullName}, ${customerId}, ${priceId}, ${status} )`;
+    } else {
+      await sql`
+        UPDATE users
+        SET price_id = ${priceId}, status = ${status}, customer_id = ${customerId}
+        WHERE email = ${email}
+      `;
     }
   } catch (error) {
     console.error("Error creating or updating user", error);
   }
 }
 
-// Insert payment in DB
+// Create a payment record in the DB after successful checkout
 async function createPayment({
   session,
   priceId,

@@ -1,5 +1,6 @@
 import { getDBConnection } from "@/lib/db";
 
+// Get all summaries for a user
 export async function getSummaries(userId: string) {
   const sql = await getDBConnection();
   const summaries = await sql`
@@ -10,6 +11,7 @@ export async function getSummaries(userId: string) {
   return summaries;
 }
 
+// Get a single summary by its ID, including a word count
 export async function getSummaryById(id: string) {
   try {
     const sql = await getDBConnection();
@@ -25,13 +27,32 @@ export async function getSummaryById(id: string) {
   }
 }
 
+// Get the total number of summaries uploaded by a user
 export const getUserUploadCount = async (userId: string) => {
   try {
     const sql = await getDBConnection();
     const [result] =
       await sql`SELECT COUNT(*) as count FROM pdf_summaries WHERE user_id=${userId}`;
-    return result?.count;
+    return Number(result?.count ?? 0);
   } catch (error) {
     console.error("Error fetching user upload count:", error);
+    return 0;
+  }
+};
+
+// Get the number of summaries uploaded by a user in the current month
+export const getUserUploadCountThisMonth = async (userId: string) => {
+  try {
+    const sql = await getDBConnection();
+    const [result] = await sql`
+      SELECT COUNT(*) as count
+      FROM pdf_summaries
+      WHERE user_id = ${userId}
+        AND created_at >= date_trunc('month', NOW())
+    `;
+    return Number(result?.count ?? 0);
+  } catch (error) {
+    console.error("Error fetching monthly upload count:", error);
+    return 0;
   }
 };
