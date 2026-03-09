@@ -108,7 +108,7 @@ export default function UploadPage({
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-6 rounded-xl border border-rose-500/30 bg-rose-500/10 p-4"
+          className="mx-auto mb-6 flex max-w-3xl rounded-xl border border-rose-500/30 bg-rose-500/10 p-4"
         >
           <div className="flex items-start gap-3">
             <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-rose-500/20">
