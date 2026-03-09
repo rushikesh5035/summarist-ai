@@ -1,3 +1,5 @@
+import { NextResponse } from "next/server";
+
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const isProtectedRoute = createRouteMatcher([
@@ -6,7 +8,17 @@ const isProtectedRoute = createRouteMatcher([
   "/upload(.*)",
 ]);
 
+const isAuthRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
+
 export default clerkMiddleware(async (auth, req) => {
+  const { userId } = await auth();
+
+  // Signed-in users cannot access sign-in / sign-up — redirect them to landing page
+  if (userId && isAuthRoute(req)) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  // Protected routes require authentication
   if (isProtectedRoute(req)) await auth.protect();
 });
 
