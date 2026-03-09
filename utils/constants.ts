@@ -1,38 +1,14 @@
-import { isDev } from "@/utils/helper";
+import { plans } from "./PricingPlans";
 
-export const pricingPlans = [
+export const pricingPlans = plans;
+
+// Credit limits per plan id
+export const PLAN_LIMITS: Record<string, { summaries: number; chats: number }> =
   {
-    name: "Free",
-    price: 0,
-    description: "Perfect for occasinal use",
-    items: [
-      "5 PDF summaries per month",
-      "Standard processing speed",
-      "Email support",
-    ],
-    id: "basic",
-    paymentLink: isDev
-      ? "https://buy.stripe.com/test_fZu4gs2jb45t2lNeRDdUY01"
-      : "",
-    priceId: isDev ? "price_1RWVmJ2LylM2AQ37bPxiYzPg" : "",
-  },
-  {
-    name: "Pro",
-    price: 15,
-    description: "For professionals and teams",
-    items: [
-      "Unlimited PDF summaries",
-      "Priority processing",
-      "24/7 priority support",
-      "Markdown Export",
-    ],
-    id: "pro",
-    paymentLink: isDev
-      ? "https://buy.stripe.com/test_6oUbIUcXPcBZ4tVbFrdUY00"
-      : "",
-    priceId: isDev ? "price_1RWVmJ2LylM2AQ37gnG24lfU" : "",
-  },
-];
+    free: { summaries: 2, chats: 2 },
+    pro: { summaries: 10, chats: 10 },
+    unlimited: { summaries: 9999, chats: 9999 },
+  };
 
 export const containerVarient = {
   hidden: { opacity: 0 },
