@@ -68,17 +68,15 @@ export default function DashboardClient({
   const handleSubmit = async () => {
     if (!file || !mode) return;
 
-    if (mode === "summary") {
-      // Validate file before uploading
-      const validatedFields = schema.safeParse({ file });
-      if (!validatedFields.success) {
-        const errorMessage =
-          validatedFields.error.flatten().fieldErrors.file?.[0] ??
-          "Invalid file";
-        toast("❌ Something went wrong", { description: errorMessage });
-        return;
-      }
+    const validatedFields = schema.safeParse({ file });
+    if (!validatedFields.success) {
+      const errorMessage =
+        validatedFields.error.flatten().fieldErrors.file?.[0] ?? "Invalid file";
+      toast("❌ Something went wrong", { description: errorMessage });
+      return;
+    }
 
+    if (mode === "summary") {
       setView("loading");
 
       try {
@@ -150,7 +148,39 @@ export default function DashboardClient({
         setView("upload");
       }
     } else if (mode === "chat") {
-      setView("chat");
+      setView("loading");
+
+      try {
+        toast("📄 Uploading PDF", {
+          description: "We are preparing your document for chat.",
+        });
+
+        const resp = await startUpload([file]);
+        if (!resp) {
+          toast("❌ Something went wrong", {
+            description: "Please use a different file",
+          });
+          setView("upload");
+          return;
+        }
+
+        const query = new URLSearchParams({
+          fileName: file.name,
+          fileUrl: resp[0].serverData.file.ufsUrl,
+        });
+
+        toast("💬 Chat Ready", {
+          description: "Opening your PDF chat workspace.",
+        });
+
+        router.push(`/chat-pdf/${crypto.randomUUID()}?${query.toString()}`);
+      } catch (error) {
+        console.error("Error occurred", error);
+        toast("❌ Something went wrong", {
+          description: "An unexpected error occurred. Please try again.",
+        });
+        setView("upload");
+      }
     }
   };
 
