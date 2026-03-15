@@ -16,7 +16,7 @@ export const plans = [
     buttonText: "Start Free",
     popular: false,
     accent: false,
-    paymentLink: null, // no checkout needed — free plan
+    paymentLink: null,
     priceId: null,
   },
   {
