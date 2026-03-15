@@ -1,8 +1,8 @@
 "use server";
 
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 
-import { hasReachedUploadLimit } from "@/lib/user";
+import { getDbUserId, hasReachedUploadLimit } from "@/lib/user";
 
 const planNameMap: Record<string, string> = {
   free: "Free",
@@ -11,17 +11,15 @@ const planNameMap: Record<string, string> = {
 };
 
 export async function getUserCredits() {
-  const { userId } = await auth();
+  const { userId } = await auth(); // Clerk ID
   if (!userId) return null;
 
-  const user = await currentUser();
-  if (!user) return null;
-
-  const email = user.emailAddresses[0].emailAddress;
+  const dbUserId = await getDbUserId(userId);
+  if (!dbUserId) return null;
 
   const { uploadCount, uploadLimit, planId } = await hasReachedUploadLimit(
-    userId,
-    email
+    userId, // clerkId
+    dbUserId // DB UUID
   );
 
   const remaining = Math.max(0, uploadLimit - uploadCount);

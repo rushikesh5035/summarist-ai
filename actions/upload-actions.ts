@@ -3,8 +3,10 @@
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
 
-import { getDBConnection } from "@/lib/db";
+import { db } from "@/db/drizzle";
+import { pdfSummaries, users } from "@/db/schema";
 import { generateSummaryFromGemini } from "@/lib/geminiai";
 import { fetchAndExtractPdfText } from "@/lib/langchain";
 import { formatFileNameAsTitle } from "@/utils/format-utils";
@@ -103,27 +105,37 @@ export async function generatePdfSummary(
 }
 
 async function savedPdfSummary({
-  userId,
+  userId, // clerkId
   fileUrl,
   summary,
   title,
   fileName,
 }: PdfSummaryType) {
-  // sql query to inserting pdf summary
   try {
-    const sql = await getDBConnection();
-    const [savedSummary] = await sql`
-      INSERT INTO pdf_summaries(
-        user_id,
-        original_file_url,
-        summary_text,
+    if (!userId) throw new Error("User ID is required");
+
+    const [dbUser] = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.clerkId, userId));
+
+    if (!dbUser) throw new Error("User not found");
+
+    const [saved] = await db
+      .insert(pdfSummaries)
+      .values({
+        userId: dbUser.id,
+        originalFileUrl: fileUrl,
+        summaryText: summary,
         title,
-        file_name
-      ) VALUES (
-          ${userId}, ${fileUrl}, ${summary}, ${title}, ${fileName}
-      ) 
-      RETURNING id, summary_text`;
-    return savedSummary;
+        fileName,
+      })
+      .returning({
+        id: pdfSummaries.id,
+        summaryText: pdfSummaries.summaryText,
+      });
+
+    return saved;
   } catch (error) {
     console.log("Error saving PDF Summary");
     throw error;
