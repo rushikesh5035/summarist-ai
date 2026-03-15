@@ -1,35 +1,83 @@
-import { User } from "@clerk/nextjs/server";
+import { User as ClerkUser, currentUser } from "@clerk/nextjs/server";
+import { and, count, eq, sql } from "drizzle-orm";
 
-import { getDBConnection } from "@/lib/db";
-import { getUserUploadCountThisMonth } from "@/lib/summaries";
+import { db } from "@/db/drizzle";
+import { pdfSummaries, subscriptions, users } from "@/db/schema";
 import { PLAN_LIMITS, pricingPlans } from "@/utils/constants";
 
-export const getPriceIdForActive = async (email: string) => {
-  const sql = await getDBConnection();
-  const query =
-    await sql`SELECT price_id FROM users WHERE email=${email} AND status = 'active'`;
+/**
+ * Called on every logged-in page
+ * Create a minimal user row the 1st time a clerk user signs in.
+ */
+export const ensureFreeUserExists = async (user: ClerkUser) => {
+  try {
+    const email = user.emailAddresses[0].emailAddress;
+    const existing = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.clerkId, user.id));
 
-  return query?.[0]?.price_id || null;
+    if (existing.length === 0) {
+      await db.insert(users).values({
+        clerkId: user.id,
+        email,
+      });
+    }
+  } catch (error) {
+    console.error("Error ensuring free user exists:", error);
+  }
 };
 
-export const hasActivePlan = async (email: string) => {
-  const sql = await getDBConnection();
-  const query =
-    await sql`SELECT price_id, status FROM users WHERE email=${email} AND status = 'active' AND price_id IS NOT NULL`;
+export const getDbUserId = async (clerkId: string): Promise<string | null> => {
+  const [user] = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(eq(users.clerkId, clerkId));
 
-  return query && query.length > 0;
+  return user?.id ?? null;
+};
+
+/**
+ * Gets the active subscription for a user
+ */
+export const getActiveSubscription = async (dbUserId: string) => {
+  const [sub] = await db
+    .select()
+    .from(subscriptions)
+    .where(
+      and(
+        eq(subscriptions.userId, dbUserId),
+        eq(subscriptions.status, "active")
+      )
+    );
+
+  return sub ?? null;
+};
+
+/**
+ * Returns true if user has a paid, active subscription.
+ */
+export const hasActivePlan = async (dbUserId: string): Promise<boolean> => {
+  const sub = await getActiveSubscription(dbUserId);
+  return sub !== null;
 };
 
 export const hasReachedUploadLimit = async (
-  userId: string,
-  userEmail: string
+  clerkId: string,
+  dbUserId: string
 ) => {
-  const uploadCount = await getUserUploadCountThisMonth(userId);
+  // Count summaries this month
+  const [result] = await db.select({ count: count() }).from(pdfSummaries)
+    .where(sql`
+      ${pdfSummaries.userId} = ${dbUserId}
+      AND ${pdfSummaries.createdAt} >= date_trunc('month', NOW())
+    `);
+  const uploadCount = Number(result?.count ?? 0);
 
-  const priceId = await getPriceIdForActive(userEmail);
-
+  // find plan from active subscription
+  const sub = await getActiveSubscription(dbUserId);
   const planId =
-    pricingPlans.find((plan) => plan.priceId === priceId)?.id ?? "free";
+    pricingPlans.find((p) => p.priceId === sub?.priceId)?.id ?? "free";
 
   const limit = PLAN_LIMITS[planId]?.summaries ?? 2;
 
@@ -39,34 +87,4 @@ export const hasReachedUploadLimit = async (
     uploadCount,
     planId,
   };
-};
-
-export const getSubscriptionStatus = async (user: User) => {
-  const hasSubscription = await hasActivePlan(
-    user.emailAddresses[0].emailAddress
-  );
-
-  return hasSubscription;
-};
-
-/**
- * Called on every protected page load.
- * If the user has no row in the DB yet (free sign-up via Clerk),
- * insert one with status='active' and price_id=NULL so their
- * summary history and credit limits work correctly.
- */
-export const ensureFreeUserExists = async (user: User) => {
-  try {
-    const sql = await getDBConnection();
-    const email = user.emailAddresses[0].emailAddress;
-    const existing = await sql`SELECT id FROM users WHERE email = ${email}`;
-    if (existing.length === 0) {
-      await sql`
-        INSERT INTO users (email, full_name, customer_id, price_id, status)
-        VALUES (${email}, ${user.fullName ?? ""}, ${null}, ${null}, ${"active"})
-      `;
-    }
-  } catch (error) {
-    console.error("Error ensuring free user exists:", error);
-  }
 };
