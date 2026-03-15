@@ -21,9 +21,9 @@ const VaultCard = ({ summary }: { summary: any }) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const wordCount =
-    summary.word_count ??
-    (summary.summary_text
-      ? summary.summary_text.trim().split(/\s+/).filter(Boolean).length
+    summary.wordCount ??
+    (summary.summaryText
+      ? summary.summaryText.trim().split(/\s+/).filter(Boolean).length
       : 0);
 
   const readTime = Math.max(1, Math.ceil(wordCount / 200));
@@ -53,10 +53,10 @@ const VaultCard = ({ summary }: { summary: any }) => {
         </div>
         <div className="min-w-0 flex-1">
           <h3 className="line-clamp-2 text-sm leading-snug font-semibold text-white">
-            {summary.title || summary.file_name || "Untitled"}
+            {summary.title || summary.fileName || "Untitled"}
           </h3>
           <p className="mt-0.5 truncate text-xs text-gray-500">
-            {summary.file_name}
+            {summary.fileName}
           </p>
         </div>
         {/* Delete button */}
@@ -78,7 +78,7 @@ const VaultCard = ({ summary }: { summary: any }) => {
       <div className="mb-5 flex items-center gap-3 text-xs text-gray-500">
         <span className="flex items-center gap-1">
           <Calendar className="h-3.5 w-3.5" />
-          {formatDate(summary.created_at)}
+          {formatDate(summary.createdAt)}
         </span>
         <span className="h-3 w-px bg-gray-700" />
         <span>{wordCount.toLocaleString()} words</span>
