@@ -4,6 +4,7 @@ import { currentUser } from "@clerk/nextjs/server";
 
 import EmptyState from "@/components/vault/EmptyState";
 import { getSummaries } from "@/lib/summaries";
+import { getDbUserId } from "@/lib/user";
 
 import VaultCard from "../../../components/vault/VaultCard";
 
@@ -19,9 +20,10 @@ export default async function HistoryPage() {
   const user = await currentUser();
   if (!user?.id) return redirect("/sign-in");
 
-  console.log(user.id);
+  const dbUserId = await getDbUserId(user.id);
+  if (!dbUserId) return redirect("/sign-in");
 
-  const summaries = await getSummaries(user.id);
+  const summaries = await getSummaries(dbUserId);
 
   return (
     <main className="mx-auto mt-20 max-w-5xl px-6 pt-8 pb-20">

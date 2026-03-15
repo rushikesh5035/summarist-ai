@@ -20,9 +20,9 @@ const ChatPdfPage = async (props: {
   const searchParams = await props.searchParams;
   const summary = await getSummaryById(id);
 
-  const fileName = summary?.file_name ?? getSearchParam(searchParams.fileName);
+  const fileName = summary?.fileName ?? getSearchParam(searchParams.fileName);
   const fileUrl =
-    summary?.original_file_url ?? getSearchParam(searchParams.fileUrl);
+    summary?.originalFileUrl ?? getSearchParam(searchParams.fileUrl);
 
   if (!fileName) notFound();
 

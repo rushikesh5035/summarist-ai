@@ -12,10 +12,10 @@ const SummaryPage = async (props: { params: Promise<{ id: string }> }) => {
   return (
     <main className="mx-auto mt-20 max-w-5xl px-6 pt-8 pb-20">
       <SummaryViewer
-        summary={summary.summary_text}
-        fileName={summary.file_name ?? ""}
-        wordCount={summary.word_count ?? 0}
-        createdAt={summary.created_at}
+        summary={summary.summaryText ?? ""}
+        fileName={summary.fileName ?? ""}
+        wordCount={summary.wordCount ?? 0}
+        createdAt={summary.createdAt.toISOString()}
       />
     </main>
   );
