@@ -1,34 +1,26 @@
 import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import ChatPage from "@/components/chat/ChatPage";
-import { getSummaryById } from "@/lib/summaries";
+import { getChatPdfById } from "@/lib/chat-pdf";
 
-function getSearchParam(
-  value: string | string[] | undefined
-): string | undefined {
-  return Array.isArray(value) ? value[0] : value;
-}
+// Force dynamic rendering and disable caching
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-const ChatPdfPage = async (props: {
-  params: Promise<{ id: string }>;
-  searchParams: Promise<{
-    fileName?: string | string[];
-    fileUrl?: string | string[];
-  }>;
-}) => {
+const ChatPdfPage = async (props: { params: Promise<{ id: string }> }) => {
   const { id } = await props.params;
-  const searchParams = await props.searchParams;
-  const summary = await getSummaryById(id);
+  const chatPdf = await getChatPdfById(id);
 
-  const fileName = summary?.fileName ?? getSearchParam(searchParams.fileName);
-  const fileUrl =
-    summary?.originalFileUrl ?? getSearchParam(searchParams.fileUrl);
-
-  if (!fileName) notFound();
+  if (!chatPdf) notFound();
 
   return (
     <main className="mx-auto mt-15 h-[calc(100dvh-60px)] max-w-5xl overflow-hidden px-6 py-4">
-      <ChatPage chatId={id} fileName={fileName} originalFileUrl={fileUrl} />
+      <ChatPage
+        chatId={id}
+        fileName={chatPdf.fileName}
+        originalFileUrl={chatPdf.fileUrl}
+      />
     </main>
   );
 };
