@@ -8,6 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { initiateChatPdf } from "@/actions/chat-actions";
 import {
   generatePdfSummary,
   storePdfSummaryAction,
@@ -164,16 +165,24 @@ export default function DashboardClient({
           return;
         }
 
-        const query = new URLSearchParams({
-          fileName: file.name,
-          fileUrl: resp[0].serverData.file.ufsUrl,
+        const fileUrl = resp[0].serverData.file.ufsUrl;
+        const fileName = resp[0].serverData.file.name;
+
+        const result = await initiateChatPdf({ fileUrl, fileName });
+
+        if (!result.success || !result.chatPdfId) {
+          toast("❌ Something went wrong", {
+            description: "Failed to start chat setup.",
+          });
+          setView("upload");
+          return;
+        }
+
+        toast("⚙️ Processing PDF", {
+          description: "Setting up your chat. This may take a moment...",
         });
 
-        toast("💬 Chat Ready", {
-          description: "Opening your PDF chat workspace.",
-        });
-
-        router.push(`/chat-pdf/${crypto.randomUUID()}?${query.toString()}`);
+        router.push(`/chat-pdf/${result.chatPdfId}`);
       } catch (error) {
         console.error("Error occurred", error);
         toast("❌ Something went wrong", {
@@ -207,6 +216,7 @@ export default function DashboardClient({
               <LoadingView
                 key="loading"
                 fileName={file?.name || ""}
+                mode={mode ?? "summary"}
                 onComplete={() => {}}
               />
             )}

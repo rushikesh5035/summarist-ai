@@ -4,26 +4,37 @@ import { useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 
+import ChatPageSkeleton from "@/components/chat/ChatPageSkeleton";
 import SummaryViewerSkeleton from "@/components/summaries/SummaryViewerSkeleton";
 
 interface LoadingViewProps {
   fileName: string;
+  mode: "summary" | "chat";
   onComplete: () => void;
 }
 
-const steps = [
+const SUMMARY_STEPS = [
   "Parsing document...",
   "Analyzing content...",
   "Extracting key points...",
   "Generating summary...",
 ];
 
+const CHAT_STEPS = [
+  "Parsing document...",
+  "Chunking text...",
+  "Building vector index...",
+  "Preparing chat...",
+];
+
 export default function LoadingView({
   fileName,
+  mode,
   onComplete,
 }: LoadingViewProps) {
   const [progress, setProgress] = useState(0);
   const [showSkeleton, setShowSkeleton] = useState(false);
+  const steps = mode === "chat" ? CHAT_STEPS : SUMMARY_STEPS;
   const stepIndex = Math.min(Math.floor(progress / 25), steps.length - 1);
 
   useEffect(() => {
@@ -88,17 +99,23 @@ export default function LoadingView({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.35 }}
         >
-          {/* Processing indicator */}
-          <div className="mb-6 flex items-center justify-center gap-2">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#0CF2A0] opacity-75" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#0CF2A0]" />
-            </span>
-            <p className="text-sm font-medium text-[#0CF2A0]">
-              Finalizing your summary…
-            </p>
-          </div>
-          <SummaryViewerSkeleton />
+          {mode === "chat" ? (
+            <ChatPageSkeleton statusLabel="Preparing chat..." />
+          ) : (
+            <>
+              {/* Processing indicator */}
+              <div className="mb-6 flex items-center justify-center gap-2">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#0CF2A0] opacity-75" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#0CF2A0]" />
+                </span>
+                <p className="text-sm font-medium text-[#0CF2A0]">
+                  Finalizing your summary...
+                </p>
+              </div>
+              <SummaryViewerSkeleton />
+            </>
+          )}
         </motion.div>
       )}
     </AnimatePresence>
