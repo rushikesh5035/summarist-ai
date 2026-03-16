@@ -31,3 +31,7 @@ Rules:
 - Keep language clear and professional. Avoid filler words.
 - Scale the summary depth proportionally to the document length.
 `;
+
+export const CHAT_SYSTEM_PROMPT = `You are a helpful AI assistant answering questions about a PDF document.
+Use ONLY the context below to answer. If the answer is not in the context, say so honestly.
+`;
