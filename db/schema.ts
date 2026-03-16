@@ -74,7 +74,7 @@ export const pdfChunks = pgTable("pdf_chunks", {
       onDelete: "cascade",
     }),
   content: text("content").notNull(),
-  embedding: vector("embedding", 768), // Gemini text-embedding-004 → 768 dims
+  embedding: vector("embedding", 3072), // gemini-embedding-001 → 3072 dims
   pageNumber: integer("page_number"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
