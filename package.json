@@ -17,6 +17,7 @@
     "@clerk/nextjs": "^6.21.0",
     "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^5.2.2",
+    "@inngest/realtime": "^0.4.6",
     "@langchain/community": "^0.3.46",
     "@langchain/core": "^0.3.58",
     "@langchain/textsplitters": "^1.0.1",
