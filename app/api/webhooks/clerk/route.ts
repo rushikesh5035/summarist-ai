@@ -12,8 +12,18 @@ export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
   if (!WEBHOOK_SECRET) {
-    throw new Error(
-      "Missing CLERK_WEBHOOK_SECRET. Please add it to your .env file."
+    console.error(
+      "[Clerk Webhook] Missing CLERK_WEBHOOK_SECRET environment variable"
+    );
+    return new Response(
+      JSON.stringify({
+        error: "Server configuration error",
+        message: "CLERK_WEBHOOK_SECRET not configured",
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
     );
   }
 
@@ -25,9 +35,17 @@ export async function POST(req: Request) {
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return new Response("Error: Missing svix headers", {
-      status: 400,
-    });
+    console.error("[Clerk Webhook] Missing svix headers");
+    return new Response(
+      JSON.stringify({
+        error: "Missing headers",
+        message: "Required svix headers not found",
+      }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 
   // Get the body
@@ -47,10 +65,17 @@ export async function POST(req: Request) {
       "svix-signature": svix_signature,
     }) as WebhookEvent;
   } catch (err) {
-    console.error("Error verifying webhook:", err);
-    return new Response("Error: Verification failed", {
-      status: 400,
-    });
+    console.error("[Clerk Webhook] Signature verification failed:", err);
+    return new Response(
+      JSON.stringify({
+        error: "Verification failed",
+        message: "Invalid webhook signature",
+      }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 
   // Handle the webhook event
@@ -66,7 +91,16 @@ export async function POST(req: Request) {
 
         if (!email) {
           console.error("[Clerk Webhook] No email found for user:", id);
-          return new Response("Error: No email address", { status: 400 });
+          return new Response(
+            JSON.stringify({
+              error: "Invalid user data",
+              message: "No email address found",
+            }),
+            {
+              status: 400,
+              headers: { "Content-Type": "application/json" },
+            }
+          );
         }
 
         // Create user in database
@@ -85,7 +119,16 @@ export async function POST(req: Request) {
 
         if (!email) {
           console.error("[Clerk Webhook] No email found for user:", id);
-          return new Response("Error: No email address", { status: 400 });
+          return new Response(
+            JSON.stringify({
+              error: "Invalid user data",
+              message: "No email address found",
+            }),
+            {
+              status: 400,
+              headers: { "Content-Type": "application/json" },
+            }
+          );
         }
 
         // Update user email in database
@@ -100,7 +143,16 @@ export async function POST(req: Request) {
 
         if (!id) {
           console.error("[Clerk Webhook] No user ID found");
-          return new Response("Error: No user ID", { status: 400 });
+          return new Response(
+            JSON.stringify({
+              error: "Invalid user data",
+              message: "No user ID found",
+            }),
+            {
+              status: 400,
+              headers: { "Content-Type": "application/json" },
+            }
+          );
         }
 
         // Delete user from database (cascade will delete related data)
@@ -114,9 +166,29 @@ export async function POST(req: Request) {
         console.log(`[Clerk Webhook] Unhandled event type: ${eventType}`);
     }
 
-    return new Response("Webhook processed successfully", { status: 200 });
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: "Webhook processed successfully",
+        eventType: eventType,
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (error) {
     console.error(`[Clerk Webhook] Error processing ${eventType}:`, error);
-    return new Response("Error: Failed to process webhook", { status: 500 });
+    return new Response(
+      JSON.stringify({
+        error: "Processing failed",
+        message: error instanceof Error ? error.message : "Unknown error",
+        eventType: eventType,
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 }
