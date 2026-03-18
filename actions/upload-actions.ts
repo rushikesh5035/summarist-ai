@@ -2,13 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db/drizzle";
 import { pdfSummaries, users } from "@/db/schema";
 import { generateSummaryFromGemini } from "@/lib/geminiai";
 import { fetchAndExtractPdfText } from "@/lib/langchain";
+import { ensureFreeUserExists } from "@/lib/user";
 import { formatFileNameAsTitle } from "@/utils/format-utils";
 
 interface PdfSummaryType {
@@ -159,6 +160,10 @@ export async function storePdfSummaryAction({
         message: "User not found",
       };
     }
+
+    // Ensure user exists in DB
+    const user = await currentUser();
+    if (user) await ensureFreeUserExists(user);
 
     savedSummary = await savedPdfSummary({
       userId,

@@ -7,6 +7,7 @@ import { and, eq } from "drizzle-orm";
 
 import { db } from "@/db/drizzle";
 import { pdfSummaries, users } from "@/db/schema";
+import { ensureFreeUserExists } from "@/lib/user";
 
 export async function deleteSummaryAction({
   summaryId,
@@ -16,6 +17,9 @@ export async function deleteSummaryAction({
   try {
     const clerkUser = await currentUser();
     if (!clerkUser?.id) throw new Error("User not found");
+
+    // Ensure user exists in DB
+    await ensureFreeUserExists(clerkUser);
 
     // Delete summary from DB
     const [dbUser] = await db

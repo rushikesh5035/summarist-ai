@@ -1,8 +1,12 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
-import { getDbUserId, hasReachedUploadLimit } from "@/lib/user";
+import {
+  ensureFreeUserExists,
+  getDbUserId,
+  hasReachedUploadLimit,
+} from "@/lib/user";
 
 const planNameMap: Record<string, string> = {
   free: "Free",
@@ -13,6 +17,10 @@ const planNameMap: Record<string, string> = {
 export async function getUserCredits() {
   const { userId } = await auth(); // Clerk ID
   if (!userId) return null;
+
+  // Ensure user exists in DB
+  const user = await currentUser();
+  if (user) await ensureFreeUserExists(user);
 
   const dbUserId = await getDbUserId(userId);
   if (!dbUserId) return null;

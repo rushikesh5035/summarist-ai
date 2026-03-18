@@ -4,7 +4,7 @@ import { currentUser } from "@clerk/nextjs/server";
 
 import EmptyState from "@/components/vault/EmptyState";
 import { getSummaries } from "@/lib/summaries";
-import { getDbUserId } from "@/lib/user";
+import { ensureFreeUserExists, getDbUserId } from "@/lib/user";
 
 import VaultCard from "../../../components/vault/VaultCard";
 
@@ -19,6 +19,9 @@ function formatDate(dateStr: string) {
 export default async function HistoryPage() {
   const user = await currentUser();
   if (!user?.id) return redirect("/sign-in");
+
+  // Create user in DB if this is their first login
+  await ensureFreeUserExists(user);
 
   const dbUserId = await getDbUserId(user.id);
   if (!dbUserId) return redirect("/sign-in");
