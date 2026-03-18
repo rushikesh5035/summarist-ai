@@ -18,16 +18,26 @@ export async function deleteSummaryAction({
     const clerkUser = await currentUser();
     if (!clerkUser?.id) throw new Error("User not found");
 
-    // Ensure user exists in DB
-    await ensureFreeUserExists(clerkUser);
-
-    // Delete summary from DB
-    const [dbUser] = await db
+    // Get user from DB (webhook should have created it)
+    let dbUser = await db
       .select({ id: users.id })
       .from(users)
       .where(eq(users.clerkId, clerkUser.id));
 
-    if (!dbUser) {
+    // Fallback: Create user if webhook missed it (for existing users or webhook failures)
+    if (dbUser.length === 0) {
+      console.warn(
+        "[Delete Summary] User not found in DB, creating via fallback:",
+        clerkUser.id
+      );
+      await ensureFreeUserExists(clerkUser);
+      dbUser = await db
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.clerkId, clerkUser.id));
+    }
+
+    if (dbUser.length === 0) {
       return {
         message: "User not found",
         success: false,
@@ -37,7 +47,10 @@ export async function deleteSummaryAction({
     const result = await db
       .delete(pdfSummaries)
       .where(
-        and(eq(pdfSummaries.id, summaryId), eq(pdfSummaries.userId, dbUser.id))
+        and(
+          eq(pdfSummaries.id, summaryId),
+          eq(pdfSummaries.userId, dbUser[0].id)
+        )
       )
       .returning({ id: pdfSummaries.id });
 

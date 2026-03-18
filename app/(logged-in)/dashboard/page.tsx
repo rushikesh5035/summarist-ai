@@ -15,11 +15,19 @@ const Dashboard = async () => {
   const user = await currentUser();
   if (!user?.id) return redirect("/sign-in");
 
-  // Create user in DB if this is their first login
-  await ensureFreeUserExists(user);
+  // Get user from DB (webhook should have created it)
+  let dbUserId = await getDbUserId(user.id);
 
-  const dbUserId = await getDbUserId(user.id);
-  if (!dbUserId) return redirect("/sign-in");
+  // Fallback: Create user if webhook missed it (for existing users or webhook failures)
+  if (!dbUserId) {
+    console.warn(
+      "[Dashboard] User not found in DB, creating via fallback:",
+      user.id
+    );
+    await ensureFreeUserExists(user);
+    dbUserId = await getDbUserId(user.id);
+    if (!dbUserId) return redirect("/sign-in");
+  }
 
   const { hasReachedLimit, uploadLimit } = await hasReachedUploadLimit(
     user.id, // clerkId

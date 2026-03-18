@@ -19,22 +19,36 @@ export async function initiateChatPdf({
   if (!userId) return { success: false, message: "Unauthorized" };
 
   try {
-    // Ensure user exists in DB
-    const user = await currentUser();
-    if (user) await ensureFreeUserExists(user);
-
-    const [dbUser] = await db
+    // Get user from DB (webhook should have created it)
+    let dbUser = await db
       .select({ id: users.id })
       .from(users)
       .where(eq(users.clerkId, userId));
 
-    if (!dbUser) return { success: false, message: "User not found" };
+    // Fallback: Create user if webhook missed it (for existing users or webhook failures)
+    if (dbUser.length === 0) {
+      console.warn(
+        "[Chat PDF] User not found in DB, creating via fallback:",
+        userId
+      );
+      const user = await currentUser();
+      if (user) {
+        await ensureFreeUserExists(user);
+        dbUser = await db
+          .select({ id: users.id })
+          .from(users)
+          .where(eq(users.clerkId, userId));
+      }
+    }
+
+    if (dbUser.length === 0)
+      return { success: false, message: "User not found" };
 
     // Create chat pdf record
     const [record] = await db
       .insert(chatPdfs)
       .values({
-        userId: dbUser.id,
+        userId: dbUser[0].id,
         fileName,
         fileUrl,
         status: "processing",

@@ -161,9 +161,23 @@ export async function storePdfSummaryAction({
       };
     }
 
-    // Ensure user exists in DB
+    // Get user from DB (webhook should have created it)
+    // Fallback: Create user if webhook missed it
     const user = await currentUser();
-    if (user) await ensureFreeUserExists(user);
+    if (user) {
+      const existingUser = await db
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.clerkId, userId));
+
+      if (existingUser.length === 0) {
+        console.warn(
+          "[Upload] User not found in DB, creating via fallback:",
+          userId
+        );
+        await ensureFreeUserExists(user);
+      }
+    }
 
     savedSummary = await savedPdfSummary({
       userId,

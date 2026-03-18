@@ -18,11 +18,22 @@ export async function getUserCredits() {
   const { userId } = await auth(); // Clerk ID
   if (!userId) return null;
 
-  // Ensure user exists in DB
-  const user = await currentUser();
-  if (user) await ensureFreeUserExists(user);
+  // Get user from DB (webhook should have created it)
+  let dbUserId = await getDbUserId(userId);
 
-  const dbUserId = await getDbUserId(userId);
+  // Fallback: Create user if webhook missed it (for existing users or webhook failures)
+  if (!dbUserId) {
+    console.warn(
+      "[Credits] User not found in DB, creating via fallback:",
+      userId
+    );
+    const user = await currentUser();
+    if (user) {
+      await ensureFreeUserExists(user);
+      dbUserId = await getDbUserId(userId);
+    }
+  }
+
   if (!dbUserId) return null;
 
   const { uploadCount, uploadLimit, planId } = await hasReachedUploadLimit(
