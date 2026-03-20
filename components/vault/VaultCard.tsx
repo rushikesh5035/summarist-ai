@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
+import { deleteChatPdfAction } from "@/actions/chat-actions";
 import { deleteSummaryAction } from "@/actions/summary-actions";
 import { VaultItem } from "@/lib/summaries";
 
@@ -52,8 +53,12 @@ const VaultCard = ({ item }: { item: VaultItem }) => {
           toast.error("Failed to delete summary");
         }
       } else {
-        // TODO: Add delete chat action
-        toast.info("Chat deletion coming soon");
+        const result = await deleteChatPdfAction({ chatPdfId: item.id });
+        if (result.success) {
+          toast.success("Chat deleted");
+        } else {
+          toast.error("Failed to delete chat");
+        }
       }
     } catch {
       toast.error("Something went wrong");
