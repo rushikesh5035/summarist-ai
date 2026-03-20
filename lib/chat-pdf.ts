@@ -138,3 +138,27 @@ export async function getChatMessages(chatPdfId: string) {
     .where(eq(chatMessages.chatPdfId, chatPdfId))
     .orderBy(asc(chatMessages.createdAt));
 }
+
+// Get all chat PDFs for a user
+export async function getChatPdfs(userId: string) {
+  const results = await db
+    .select({
+      id: chatPdfs.id,
+      userId: chatPdfs.userId,
+      fileName: chatPdfs.fileName,
+      fileUrl: chatPdfs.fileUrl,
+      status: chatPdfs.status,
+      createdAt: chatPdfs.createdAt,
+      updatedAt: chatPdfs.updatedAt,
+      messageCount: sql<number>`(
+        SELECT COUNT(*)::int
+        FROM ${chatMessages}
+        WHERE ${chatMessages.chatPdfId} = ${chatPdfs.id}
+      )`.as("message_count"),
+    })
+    .from(chatPdfs)
+    .where(eq(chatPdfs.userId, userId))
+    .orderBy(sql`${chatPdfs.updatedAt} DESC`);
+
+  return results;
+}

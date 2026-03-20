@@ -3,18 +3,10 @@ import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs/server";
 
 import EmptyState from "@/components/vault/EmptyState";
-import { getSummaries } from "@/lib/summaries";
+import { getVaultItems } from "@/lib/summaries";
 import { ensureFreeUserExists, getDbUserId } from "@/lib/user";
 
 import VaultCard from "../../../components/vault/VaultCard";
-
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
 
 export default async function HistoryPage() {
   const user = await currentUser();
@@ -34,7 +26,7 @@ export default async function HistoryPage() {
     if (!dbUserId) return redirect("/sign-in");
   }
 
-  const summaries = await getSummaries(dbUserId);
+  const vaultItems = await getVaultItems(dbUserId);
 
   return (
     <main className="mx-auto mt-20 max-w-5xl px-6 pt-8 pb-20">
@@ -47,12 +39,12 @@ export default async function HistoryPage() {
         </p>
       </div>
 
-      {summaries.length === 0 ? (
+      {vaultItems.length === 0 ? (
         <EmptyState />
       ) : (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {summaries.map((summary: any) => (
-            <VaultCard key={summary.id} summary={summary} />
+          {vaultItems.map((item) => (
+            <VaultCard key={`${item.type}-${item.id}`} item={item} />
           ))}
         </div>
       )}
