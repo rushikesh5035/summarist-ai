@@ -157,7 +157,7 @@ const VaultCard = ({ item }: { item: VaultItem }) => {
           </Link>
         ) : (
           <Link
-            href={`/chat/${item.id}`}
+            href={`/chat-pdf/${item.id}`}
             className={`flex w-full items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-medium transition ${
               item.status === "ready"
                 ? "border-gray-700 text-gray-300 hover:border-blue-400/40 hover:text-blue-400"
