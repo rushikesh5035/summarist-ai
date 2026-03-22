@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
+import Logo from "./Logo";
 
 interface NavLinkProps {
   href?: string;
@@ -100,50 +101,16 @@ const Navbar = () => {
     >
       <nav className="mx-auto flex h-15 max-w-5xl items-center justify-between">
         {/* LOGO */}
-        <div className="flex shrink-0 items-center">
-          <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-[#0CF2A0] to-[#0CF2A0]/60">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M6 2C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2H6Z"
-                fill="#0a0a0a"
-                fillOpacity="0.8"
-              />
-              <path d="M14 2V8H20" fill="#0a0a0a" fillOpacity="0.5" />
-              <path
-                d="M14 2L20 8"
-                stroke="#0a0a0a"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-              <circle
-                cx="12"
-                cy="15"
-                r="3.5"
-                stroke="#0CF2A0"
-                strokeWidth="1.5"
-                fill="none"
-              />
-              <path
-                d="M10 15L11.2 16.5L14 13.5"
-                stroke="#0CF2A0"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-          <Link href={"/"}>
-            <span className="ml-2.5 text-xl font-bold tracking-tight text-white">
+        <Link href={"/"}>
+          <div className="flex shrink-0 items-center">
+            <div className="relative flex items-center justify-center">
+              <Logo size={35} />
+            </div>
+            <span className="ml-1.5 text-xl font-bold tracking-tight text-white">
               Summarist
             </span>
-          </Link>
-        </div>
+          </div>
+        </Link>
 
         {/* Nav Menu */}
         <div className="hidden grow items-center justify-center space-x-8 px-4 md:flex">
@@ -154,29 +121,40 @@ const Navbar = () => {
           <NavLink href="#pricing">Pricing</NavLink>
         </div>
 
-        <div className="flex shrink-0 items-center gap-4">
+        {/* Right side - Auth Section */}
+        <div className="flex min-w-[200px] shrink-0 items-center justify-end gap-4">
           {!isLoaded ? (
-            <Skeleton className="h-8 w-8 rounded-full" />
+            <>
+              <Skeleton className="h-8 w-32 rounded-full" />
+              <Skeleton className="h-8 w-8 rounded-full" />
+            </>
           ) : (
             <>
               <SignedIn>
-                {credits && (
-                  <div
-                    className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${
-                      credits.isUnlimited
-                        ? "border-[#0CF2A0]/30 bg-[#0CF2A0]/10 text-[#0CF2A0]"
-                        : credits.remaining === 0
-                          ? "border-red-500/30 bg-red-500/10 text-red-400"
-                          : "border-gray-700 bg-white/5 text-gray-300"
-                    }`}
-                  >
-                    <Zap className="h-3 w-3" />
-                    {credits.isUnlimited
-                      ? `${credits.planName} (∞ credits)`
-                      : `${credits.planName} plan (${credits.remaining}/${credits.uploadLimit} credits)`}
-                  </div>
+                {!credits ? (
+                  <>
+                    <Skeleton className="h-8 w-32 rounded-full" />
+                    <UserButton />
+                  </>
+                ) : (
+                  <>
+                    <div
+                      className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${
+                        credits.isUnlimited
+                          ? "border-[#0CF2A0]/30 bg-[#0CF2A0]/10 text-[#0CF2A0]"
+                          : credits.remaining === 0
+                            ? "border-red-500/30 bg-red-500/10 text-red-400"
+                            : "border-gray-700 bg-white/5 text-gray-300"
+                      }`}
+                    >
+                      <Zap className="h-3 w-3" />
+                      {credits.isUnlimited
+                        ? `${credits.planName} (∞)`
+                        : `${credits.remaining}/${credits.uploadLimit} Credits`}
+                    </div>
+                    <UserButton />
+                  </>
                 )}
-                <UserButton />
               </SignedIn>
               <SignedOut>
                 <Button

@@ -9,6 +9,8 @@ import { motion } from "motion/react";
 
 import { cn } from "@/lib/utils";
 
+import Logo from "./Logo";
+
 interface FooterLink {
   label: string;
   href: string;
@@ -56,14 +58,16 @@ export const AnimatedFooter = ({
               transition={{ duration: 0.5 }}
               className="mb-6 max-w-md"
             >
-              <div className="mb-4 flex items-center justify-center gap-2.5">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-[#0CF2A0] to-[#0CF2A0]/50 shadow-lg shadow-[#0CF2A0]/10">
-                  {brandIcon}
+              <Link href={"/"}>
+                <div className="mb-4 flex items-center justify-center gap-2.5">
+                  <div className="flex items-center justify-center">
+                    <Logo size={35} />
+                  </div>
+                  <span className="text-2xl font-bold tracking-tight text-white">
+                    {brandName}
+                  </span>
                 </div>
-                <span className="text-2xl font-bold tracking-tight text-white">
-                  {brandName}
-                </span>
-              </div>
+              </Link>
               <p className="leading-relaxed text-gray-500">
                 {brandDescription}
               </p>
@@ -76,7 +80,7 @@ export const AnimatedFooter = ({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="mb-30 flex flex-wrap items-center justify-center gap-x-6 gap-y-9"
+                className="mb-35 flex flex-wrap items-center justify-center gap-x-6 gap-y-9"
               >
                 {navLinks.map((link, index) => (
                   <motion.div

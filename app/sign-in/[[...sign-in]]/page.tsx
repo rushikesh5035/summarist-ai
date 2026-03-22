@@ -10,6 +10,7 @@ import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 
+import Logo from "@/components/common/Logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -57,7 +58,7 @@ export default function SignInPage() {
       await signIn.authenticateWithRedirect({
         strategy: "oauth_google",
         redirectUrl: "/sso-callback",
-        redirectUrlComplete: "/dashboard",
+        redirectUrlComplete: "/",
       });
     } catch (err: any) {
       console.error("Error:", JSON.stringify(err, null, 2));
@@ -78,43 +79,9 @@ export default function SignInPage() {
             transition={{ duration: 0.8 }}
             className="relative z-10 px-12 text-center"
           >
-            <div className="mb-8 flex items-center justify-center space-x-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-[#0CF2A0] to-[#0CF2A0]/60">
-                <svg
-                  width="28"
-                  height="28"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M6 2C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2H6Z"
-                    fill="#0a0a0a"
-                    fillOpacity="0.8"
-                  />
-                  <path d="M14 2V8H20" fill="#0a0a0a" fillOpacity="0.5" />
-                  <path
-                    d="M14 2L20 8"
-                    stroke="#0a0a0a"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                  <circle
-                    cx="12"
-                    cy="15"
-                    r="3.5"
-                    stroke="#0CF2A0"
-                    strokeWidth="1.5"
-                    fill="none"
-                  />
-                  <path
-                    d="M10 15L11.2 16.5L14 13.5"
-                    stroke="#0CF2A0"
-                    strokeWidth="1.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+            <div className="mb-8 flex items-center justify-center space-x-2">
+              <div className="flex items-center justify-center">
+                <Logo size={40} />
               </div>
               <span className="text-3xl font-bold text-white">Summarist</span>
             </div>
@@ -138,54 +105,16 @@ export default function SignInPage() {
             className="w-full max-w-md"
           >
             {/* Mobile logo */}
-            <div className="mb-10 flex items-center space-x-3 lg:hidden">
-              <div
-                className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-linear-to-br from-[#0CF2A0] to-[#0CF2A0]/60"
-                onClick={() => router.push("/")}
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M6 2C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2H6Z"
-                    fill="#0a0a0a"
-                    fillOpacity="0.8"
-                  />
-                  <path d="M14 2V8H20" fill="#0a0a0a" fillOpacity="0.5" />
-                  <path
-                    d="M14 2L20 8"
-                    stroke="#0a0a0a"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                  <circle
-                    cx="12"
-                    cy="15"
-                    r="3.5"
-                    stroke="#0CF2A0"
-                    strokeWidth="1.5"
-                    fill="none"
-                  />
-                  <path
-                    d="M10 15L11.2 16.5L14 13.5"
-                    stroke="#0CF2A0"
-                    strokeWidth="1.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+            <Link href={"/"}>
+              <div className="mb-4 flex items-center space-x-2 lg:hidden">
+                <div className="flex cursor-pointer items-center justify-center">
+                  <Logo size={30} />
+                </div>
+                <span className="cursor-pointer text-xl font-bold text-white">
+                  Summarist
+                </span>
               </div>
-              <span
-                className="cursor-pointer text-xl font-bold text-white"
-                onClick={() => router.push("/")}
-              >
-                Summarist
-              </span>
-            </div>
+            </Link>
 
             <h1 className="mb-2 text-3xl font-bold text-white">Welcome back</h1>
             <p className="mb-8 text-gray-400">
