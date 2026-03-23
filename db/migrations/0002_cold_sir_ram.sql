@@ -1,0 +1,1 @@
+ALTER TABLE "pdf_chunks" ALTER COLUMN "embedding" SET DATA TYPE vector(3072);
