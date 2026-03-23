@@ -7,6 +7,9 @@ const isProtectedRoute = createRouteMatcher([
   "/vault(.*)",
   "/summaries(.*)",
   "/chat-pdf(.*)",
+  "/api/checkout(.*)",
+  "/api/chat(.*)",
+  "/api/subscription(.*)",
 ]);
 
 const isAuthRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
