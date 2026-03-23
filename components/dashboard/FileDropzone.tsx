@@ -50,7 +50,7 @@ export default function FileDropzone({
         or click anywhere to browse files
       </p>
       <span className="inline-flex items-center gap-1.5 rounded-md border border-gray-700 bg-white/5 px-3 py-1.5 text-xs text-gray-400">
-        <FileText className="h-3.5 w-3.5" /> Supports .pdf up to 50 MB
+        <FileText className="h-3.5 w-3.5" /> Supports .pdf up to 32 MB
       </span>
       <input
         ref={fileInputRef}
