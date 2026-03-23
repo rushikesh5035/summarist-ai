@@ -4,7 +4,7 @@ import { Source_Sans_3 as FontSans } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 
 import { Toaster } from "@/components/ui/sonner";
-import { ORIGIN_URL } from "@/utils/helper";
+import { generatePageMetadata, siteConfig } from "@/config/site";
 
 import "./globals.css";
 
@@ -15,19 +15,19 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "Summarist - AI-Powered PDF Summarization",
-  description:
-    "Save hours of reading time. Transform lengthy PDFs into clear, accurate Summaries in seconds with our advanced AI technology",
-  openGraph: {
-    images: [
+  ...generatePageMetadata("/"),
+  title: {
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.name}`,
+  },
+  icons: {
+    icon: [
       {
-        url: "/opengraph-img.png",
+        url: "/favicon.ico",
+        sizes: "any",
+        type: "image/x-icon",
       },
     ],
-  },
-  metadataBase: new URL(ORIGIN_URL),
-  alternates: {
-    canonical: ORIGIN_URL,
   },
 };
 

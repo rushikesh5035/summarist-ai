@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { currentUser } from "@clerk/nextjs/server";
@@ -10,6 +11,15 @@ import {
 } from "@/lib/user";
 
 import DashboardClient from "./DashboardClient";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "Upload and manage your PDF summaries",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 const Dashboard = async () => {
   const user = await currentUser();

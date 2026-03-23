@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { currentUser } from "@clerk/nextjs/server";
@@ -7,6 +8,15 @@ import { getVaultItems } from "@/lib/summaries";
 import { ensureFreeUserExists, getDbUserId } from "@/lib/user";
 
 import VaultCard from "../../../components/vault/VaultCard";
+
+export const metadata: Metadata = {
+  title: "My Vault",
+  description: "View all your saved PDF summaries and chat history",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function HistoryPage() {
   const user = await currentUser();
