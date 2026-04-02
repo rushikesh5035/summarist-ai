@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 import { Toaster } from "@/components/ui/sonner";
 import { generatePageMetadata, siteConfig } from "@/config/site";
+import LenisProvider from "@/contexts/LenisProvider";
 
 import "./globals.css";
 
@@ -40,7 +41,11 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={`${fontSans.variable} font-sans antialiased`}>
-          <div className="relative flex min-h-screen flex-col">{children}</div>
+          <LenisProvider>
+            <div className="relative flex min-h-screen flex-col">
+              {children}
+            </div>
+          </LenisProvider>
           <Toaster />
         </body>
       </html>
