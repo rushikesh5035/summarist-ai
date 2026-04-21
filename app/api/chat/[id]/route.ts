@@ -1,12 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { auth } from "@clerk/nextjs/server";
+
 import {
   getChatMessages,
+  getChatPdfById,
   saveChatMessage,
   similaritySearch,
 } from "@/lib/chat-pdf";
-import { embedText, genAI, model } from "@/lib/geminiai";
+import { embedText, model } from "@/lib/geminiai";
+import { getDbUserId } from "@/lib/user";
 import { CHAT_SYSTEM_PROMPT } from "@/utils/prompts";
+
+// Verifies the authenticated user owns the given chatPdfId.
+// Returns the dbUserId on success, or null if unauthorized / not found.
+async function verifyOwnership(chatPdfId: string): Promise<string | null> {
+  const { userId: clerkId } = await auth();
+  if (!clerkId) return null;
+
+  const dbUserId = await getDbUserId(clerkId);
+  if (!dbUserId) return null;
+
+  const record = await getChatPdfById(chatPdfId);
+  if (!record || record.userId !== dbUserId) return null;
+
+  return dbUserId;
+}
 
 export const POST = async (
   req: NextRequest,
@@ -14,6 +33,11 @@ export const POST = async (
 ) => {
   const { id: chatPdfId } = await params;
   const { message } = await req.json();
+
+  const dbUserId = await verifyOwnership(chatPdfId);
+  if (!dbUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   if (!message || typeof message !== "string") {
     return NextResponse.json({ error: "message is required" }, { status: 400 });
@@ -64,8 +88,6 @@ export const POST = async (
     }
 
     // 5. Call Gemini with RAG context
-    // Note: Don't use systemInstruction - it has strict format requirements
-    // Instead, include instructions in the first message
     const chat = model.startChat({
       history: geminiHistory,
     });
@@ -121,12 +143,18 @@ User question: ${message}`;
   }
 };
 
-// GET — load existing messages on page open
+// load existing messages on page open
 export const GET = async (
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) => {
   const { id: chatPdfId } = await params;
+
+  const dbUserId = await verifyOwnership(chatPdfId);
+  if (!dbUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const messages = await getChatMessages(chatPdfId);
   return NextResponse.json({ messages });
 };
