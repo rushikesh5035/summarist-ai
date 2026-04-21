@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 import { desc, eq, sql } from "drizzle-orm";
 
 import { db } from "@/db/drizzle";
@@ -10,10 +12,8 @@ export type VaultItem = {
   title: string;
   fileName: string;
   createdAt: Date;
-  // Summary-specific
   summaryText?: string;
   originalFileUrl?: string;
-  // Chat-specific
   fileUrl?: string;
   status?: string;
   messageCount?: number;
@@ -85,7 +85,7 @@ export async function getSummaries(dbUserId: string) {
 }
 
 // Get a single summary by its ID, including a word count
-export async function getSummaryById(id: string) {
+export const getSummaryById = cache(async function getSummaryById(id: string) {
   try {
     const [summary] = await db
       .select({
@@ -97,9 +97,10 @@ export async function getSummaryById(id: string) {
         fileName: pdfSummaries.fileName,
         createdAt: pdfSummaries.createdAt,
         wordCount: sql<number>`
-          LENGTH(${pdfSummaries.summaryText}) 
-          - LENGTH(REPLACE(${pdfSummaries.summaryText}, ' ', '')) 
-          + 1`.as("word_count"),
+          array_length(
+            string_to_array(trim(${pdfSummaries.summaryText}), ' '),
+            1
+          )`.as("word_count"),
       })
       .from(pdfSummaries)
       .where(eq(pdfSummaries.id, id));
@@ -107,5 +108,6 @@ export async function getSummaryById(id: string) {
     return summary ?? null;
   } catch (error) {
     console.error("Error fetching summary by id:", id);
+    return null;
   }
-}
+});
