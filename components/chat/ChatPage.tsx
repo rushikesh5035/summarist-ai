@@ -2,10 +2,14 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import { useInngestSubscription } from "@inngest/realtime/hooks";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowDown,
+  ArrowLeft,
   Bot,
   FileText,
   MessageSquare,
@@ -94,6 +98,7 @@ function formatMessageTime(ts?: number | string): string {
 }
 
 const ChatPage: React.FC<ChatPageProps> = ({ fileName, chatId }) => {
+  const router = useRouter();
   const [status, setStatus] = useState<ProcessingStatus>("processing");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -291,11 +296,16 @@ const ChatPage: React.FC<ChatPageProps> = ({ fileName, chatId }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
-  const handleScroll = () => {
+  useEffect(() => {
     const el = scrollContainerRef.current;
     if (!el) return;
-    setShowScrollBtn(el.scrollHeight - el.scrollTop - el.clientHeight > 100);
-  };
+    const onScroll = () => {
+      const shouldShow = el.scrollHeight - el.scrollTop - el.clientHeight > 100;
+      setShowScrollBtn((prev) => (prev !== shouldShow ? shouldShow : prev));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
 
   const handleSend = async (text?: string) => {
     const msg = text || input.trim();
@@ -383,126 +393,133 @@ const ChatPage: React.FC<ChatPageProps> = ({ fileName, chatId }) => {
       transition={{ duration: 0.4 }}
       className="flex h-full min-h-0 flex-col overflow-hidden"
     >
-      {/* File badge */}
-      <div className="mb-4 flex items-center justify-center gap-2">
-        <div className="flex items-center gap-2 rounded-full border border-gray-700/60 bg-[#1a1a1a] px-4 py-1.5">
-          <FileText className="h-3.5 w-3.5 text-[#0CF2A0]" />
-          <span className="max-w-50 truncate text-sm text-gray-400">
-            {fileName}
-          </span>
+      <div className="mb-4 flex items-center">
+        {/* File badge — centered */}
+        <div className="flex flex-1 justify-center">
+          <div className="flex items-center gap-2 rounded-full border border-gray-700/60 bg-[#1a1a1a] px-4 py-1.5">
+            <FileText className="h-3.5 w-3.5 text-[#0CF2A0]" />
+            <span className="max-w-50 truncate text-[13px] text-gray-400">
+              {fileName}
+            </span>
+          </div>
         </div>
+
+        {/* Spacer to balance the left button */}
+        <div className="w-[72px]" />
       </div>
 
       {/* Messages */}
-      <div
-        ref={scrollContainerRef}
-        onScroll={handleScroll}
-        className="relative min-h-0 flex-1 space-y-1 overflow-y-auto scroll-smooth px-1"
-        style={{ scrollbarWidth: "thin", scrollbarColor: "#333 transparent" }}
-      >
-        {messages.length === 0 ? (
-          <div className="flex h-full flex-col items-center justify-center px-4 text-center">
-            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0CF2A0]/10">
-              <MessageSquare className="h-8 w-8 text-[#0CF2A0]" />
+      <div className="relative min-h-0 flex-1">
+        <div
+          ref={scrollContainerRef}
+          data-lenis-prevent
+          className="absolute inset-0 space-y-1 overflow-y-auto px-1"
+          style={{ scrollbarWidth: "thin", scrollbarColor: "#333 transparent" }}
+        >
+          {messages.length === 0 ? (
+            <div className="flex h-full flex-col items-center justify-center px-4 text-center">
+              <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0CF2A0]/10">
+                <MessageSquare className="h-8 w-8 text-[#0CF2A0]" />
+              </div>
+              <h2 className="mb-2 text-xl font-semibold text-white">
+                Chat with your PDF
+              </h2>
+              <p className="mb-8 max-w-sm text-sm text-gray-500">
+                Ask questions about your document and get instant AI-powered
+                answers.
+              </p>
+              <div className="flex w-full max-w-sm flex-col gap-2">
+                {SUGGESTIONS.map((suggestion, i) => (
+                  <motion.button
+                    key={i}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 + i * 0.1 }}
+                    onClick={() => handleSend(suggestion)}
+                    className="group rounded-xl border border-gray-700/60 bg-[#1a1a1a]/50 px-4 py-3 text-left text-sm text-gray-400 transition-all hover:border-[#0CF2A0]/40 hover:bg-[#0CF2A0]/5 hover:text-gray-200"
+                  >
+                    <span className="mr-2 text-[#0CF2A0] transition-all group-hover:mr-3">
+                      →
+                    </span>
+                    {suggestion}
+                  </motion.button>
+                ))}
+              </div>
             </div>
-            <h2 className="mb-2 text-xl font-semibold text-white">
-              Chat with your PDF
-            </h2>
-            <p className="mb-8 max-w-sm text-sm text-gray-500">
-              Ask questions about your document and get instant AI-powered
-              answers.
-            </p>
-            <div className="flex w-full max-w-sm flex-col gap-2">
-              {SUGGESTIONS.map((suggestion, i) => (
-                <motion.button
-                  key={i}
-                  initial={{ opacity: 0, y: 10 }}
+          ) : (
+            <div className="space-y-4 py-4">
+              {messages.map((msg) => (
+                <motion.div
+                  key={msg.id}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 + i * 0.1 }}
-                  onClick={() => handleSend(suggestion)}
-                  className="group rounded-xl border border-gray-700/60 bg-[#1a1a1a]/50 px-4 py-3 text-left text-sm text-gray-400 transition-all hover:border-[#0CF2A0]/40 hover:bg-[#0CF2A0]/5 hover:text-gray-200"
+                  transition={{ duration: 0.3 }}
+                  className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  <span className="mr-2 text-[#0CF2A0] transition-all group-hover:mr-3">
-                    →
-                  </span>
-                  {suggestion}
-                </motion.button>
+                  {msg.role === "assistant" && (
+                    <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#0CF2A0]/10">
+                      <Bot className="h-4 w-4 text-[#0CF2A0]" />
+                    </div>
+                  )}
+                  <div
+                    className={`flex max-w-[80%] flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}
+                  >
+                    <div
+                      className={`rounded-2xl px-3 py-[6px] text-sm leading-relaxed whitespace-pre-wrap ${
+                        msg.role === "user"
+                          ? "rounded-tl-lg rounded-br-md bg-[#0CF2A0] text-[#111111]"
+                          : "rounded-tr-lg rounded-bl-md border border-gray-700/60 bg-[#1a1a1a] text-gray-300"
+                      }`}
+                    >
+                      {msg.content}
+                    </div>
+                    {msg.timestamp && (
+                      <span
+                        className={`mt-1 block px-1 text-[11px] text-gray-500 ${msg.role === "user" ? "text-right" : "text-left"}`}
+                      >
+                        {formatMessageTime(msg.timestamp)}
+                      </span>
+                    )}
+                  </div>
+                  {msg.role === "user" && (
+                    <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-gray-700/50">
+                      <User className="h-4 w-4 text-gray-400" />
+                    </div>
+                  )}
+                </motion.div>
               ))}
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-4 py-4">
-            {messages.map((msg) => (
-              <motion.div
-                key={msg.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-              >
-                {msg.role === "assistant" && (
+
+              {isTyping && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex gap-3"
+                >
                   <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#0CF2A0]/10">
                     <Bot className="h-4 w-4 text-[#0CF2A0]" />
                   </div>
-                )}
-                <div
-                  className={`flex max-w-[80%] flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}
-                >
-                  <div
-                    className={`rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
-                      msg.role === "user"
-                        ? "rounded-br-md bg-[#0CF2A0] text-[#111111]"
-                        : "rounded-bl-md border border-gray-700/60 bg-[#1a1a1a] text-gray-300"
-                    }`}
-                  >
-                    {msg.content}
+                  <div className="rounded-2xl rounded-bl-md border border-gray-700/60 bg-[#1a1a1a] px-4 py-3">
+                    <div className="flex items-center gap-1.5">
+                      {[0, 0.2, 0.4].map((delay, i) => (
+                        <motion.span
+                          key={i}
+                          className="h-2 w-2 rounded-full bg-[#0CF2A0]/60"
+                          animate={{ opacity: [0.3, 1, 0.3] }}
+                          transition={{
+                            duration: 1,
+                            repeat: Infinity,
+                            delay,
+                          }}
+                        />
+                      ))}
+                    </div>
                   </div>
-                  {msg.timestamp && (
-                    <span
-                      className={`mt-1 block px-1 text-[11px] text-gray-500 ${msg.role === "user" ? "text-right" : "text-left"}`}
-                    >
-                      {formatMessageTime(msg.timestamp)}
-                    </span>
-                  )}
-                </div>
-                {msg.role === "user" && (
-                  <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-gray-700/50">
-                    <User className="h-4 w-4 text-gray-400" />
-                  </div>
-                )}
-              </motion.div>
-            ))}
-
-            {isTyping && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex gap-3"
-              >
-                <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#0CF2A0]/10">
-                  <Bot className="h-4 w-4 text-[#0CF2A0]" />
-                </div>
-                <div className="rounded-2xl rounded-bl-md border border-gray-700/60 bg-[#1a1a1a] px-4 py-3">
-                  <div className="flex items-center gap-1.5">
-                    {[0, 0.2, 0.4].map((delay, i) => (
-                      <motion.span
-                        key={i}
-                        className="h-2 w-2 rounded-full bg-[#0CF2A0]/60"
-                        animate={{ opacity: [0.3, 1, 0.3] }}
-                        transition={{
-                          duration: 1,
-                          repeat: Infinity,
-                          delay,
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-        )}
+                </motion.div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+          )}
+        </div>
 
         <AnimatePresence>
           {showScrollBtn && (
@@ -513,7 +530,7 @@ const ChatPage: React.FC<ChatPageProps> = ({ fileName, chatId }) => {
               onClick={() =>
                 messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
               }
-              className="sticky bottom-4 left-1/2 z-10 flex h-9 w-9 -translate-x-1/2 items-center justify-center rounded-full border border-gray-700 bg-[#1a1a1a] transition-colors hover:bg-gray-800"
+              className="absolute bottom-4 left-1/2 z-10 flex h-9 w-9 -translate-x-1/2 items-center justify-center rounded-full border border-gray-700 bg-[#1a1a1a] transition-colors hover:bg-gray-800"
             >
               <ArrowDown className="h-4 w-4 text-gray-400" />
             </motion.button>
@@ -549,9 +566,6 @@ const ChatPage: React.FC<ChatPageProps> = ({ fileName, chatId }) => {
             </Button>
           </div>
         </div>
-        <p className="mt-2 text-center text-[11px] text-gray-600">
-          AI responses are generated from your document content
-        </p>
       </div>
     </motion.div>
   );
