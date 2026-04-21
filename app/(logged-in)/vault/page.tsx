@@ -3,11 +3,9 @@ import { redirect } from "next/navigation";
 
 import { currentUser } from "@clerk/nextjs/server";
 
-import EmptyState from "@/components/vault/EmptyState";
+import VaultPageClient from "@/components/vault/VaultPageClient";
 import { getVaultItems } from "@/lib/summaries";
 import { ensureFreeUserExists, getDbUserId } from "@/lib/user";
-
-import VaultCard from "../../../components/vault/VaultCard";
 
 export const metadata: Metadata = {
   title: "My Vault",
@@ -38,26 +36,5 @@ export default async function HistoryPage() {
 
   const vaultItems = await getVaultItems(dbUserId);
 
-  return (
-    <main className="mx-auto mt-20 max-w-5xl px-6 pt-8 pb-20">
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold tracking-tight text-white">
-          My Vault
-        </h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Your secure space for all processed documents & conversations
-        </p>
-      </div>
-
-      {vaultItems.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {vaultItems.map((item) => (
-            <VaultCard key={`${item.type}-${item.id}`} item={item} />
-          ))}
-        </div>
-      )}
-    </main>
-  );
+  return <VaultPageClient vaultItems={vaultItems} />;
 }

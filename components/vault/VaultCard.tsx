@@ -11,6 +11,7 @@ import {
   MessageSquare,
   Trash2,
 } from "lucide-react";
+import { motion } from "motion/react";
 import { toast } from "sonner";
 
 import { deleteChatPdfAction } from "@/actions/chat-actions";
@@ -26,7 +27,13 @@ function formatDate(dateStr: string | Date) {
   });
 }
 
-const VaultCard = ({ item }: { item: VaultItem }) => {
+const VaultCard = ({
+  item,
+  animationIndex = 0,
+}: {
+  item: VaultItem;
+  animationIndex?: number;
+}) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const isSummary = item.type === "summary";
@@ -68,7 +75,17 @@ const VaultCard = ({ item }: { item: VaultItem }) => {
   };
 
   return (
-    <div className="group flex flex-col rounded-xl border border-gray-700/50 bg-[#1a1a1a] p-5 transition-all duration-200 hover:border-[#0CF2A0]/30 hover:shadow-lg hover:shadow-[#0CF2A0]/5">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        delay: animationIndex * 0.06,
+        duration: 0.7,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      className="group flex flex-col rounded-xl border border-gray-700/50 bg-[#1a1a1a] p-5 transition-all duration-200 hover:border-[#0CF2A0]/30 hover:shadow-lg hover:shadow-[#0CF2A0]/5"
+    >
+      {" "}
       <div className="mb-4 flex items-start gap-3">
         <div
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
@@ -128,7 +145,6 @@ const VaultCard = ({ item }: { item: VaultItem }) => {
           )}
         </button>
       </div>
-
       {/* Meta */}
       <div className="mb-5 flex items-center gap-3 text-xs text-gray-500">
         <span className="flex items-center gap-1">
@@ -144,7 +160,6 @@ const VaultCard = ({ item }: { item: VaultItem }) => {
           </>
         )}
       </div>
-
       {/* Actions */}
       <div className="mt-auto">
         {isSummary ? (
@@ -176,7 +191,7 @@ const VaultCard = ({ item }: { item: VaultItem }) => {
           </Link>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
