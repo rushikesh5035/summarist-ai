@@ -33,6 +33,16 @@ export async function generatePdfSummary(
     },
   ]
 ) {
+  // verify user is authenticated
+  const { userId: clerkUserId } = await auth();
+  if (!clerkUserId) {
+    return {
+      success: false,
+      message: "Unauthorized",
+      data: null,
+    };
+  }
+
   if (!uploadResponse) {
     return {
       success: false,
@@ -138,7 +148,7 @@ async function savedPdfSummary({
 
     return saved;
   } catch (error) {
-    console.log("Error saving PDF Summary");
+    console.error("Error saving PDF Summary:", error);
     throw error;
   }
 }
@@ -201,8 +211,10 @@ export async function storePdfSummaryAction({
     };
   }
 
-  // Revalidate our cache
+  // Revalidate all pages that display the summary or summary count
   revalidatePath(`/summaries/${savedSummary.id}`);
+  revalidatePath("/vault");
+  revalidatePath("/dashboard");
 
   return {
     success: true,

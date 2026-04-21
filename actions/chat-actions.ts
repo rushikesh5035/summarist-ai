@@ -8,7 +8,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { chatPdfs, users } from "@/db/schema";
 import { inngest } from "@/inngest/client";
-import { ensureFreeUserExists } from "@/lib/user";
+import { ensureFreeUserExists, hasReachedUploadLimit } from "@/lib/user";
 
 export async function initiateChatPdf({
   fileUrl,
@@ -46,7 +46,16 @@ export async function initiateChatPdf({
     if (dbUser.length === 0)
       return { success: false, message: "User not found" };
 
-    // Create chat pdf record
+    // Enforce monthly chat limit
+    const { hasReachedChatLimit, chatCount, chatLimit } =
+      await hasReachedUploadLimit(userId, dbUser[0].id);
+    if (hasReachedChatLimit) {
+      return {
+        success: false,
+        message: `You've reached your plan limit of ${chatLimit} PDF chat${chatLimit === 1 ? "" : "s"} this month. Please upgrade to continue.`,
+      };
+    }
+
     const [record] = await db
       .insert(chatPdfs)
       .values({
