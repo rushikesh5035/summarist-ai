@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
-import { Zap } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 import { motion, useMotionValueEvent, useScroll, Variants } from "motion/react";
 
 import { getUserCredits } from "@/actions/credits-actions";
@@ -102,13 +102,13 @@ const Navbar = () => {
       <nav className="mx-auto flex h-15 max-w-5xl items-center justify-between">
         {/* LOGO */}
         <Link href={"/"}>
-          <div className="flex shrink-0 items-center">
+          <div className="flex shrink-0 items-center justify-center">
             <div className="relative flex items-center justify-center">
-              <Logo size={35} />
+              <Logo size={28} />
+              <span className="ml-1.5 text-xl font-bold tracking-tight text-white">
+                Summarist
+              </span>
             </div>
-            <span className="ml-1.5 text-xl font-bold tracking-tight text-white">
-              Summarist
-            </span>
           </div>
         </Link>
 
@@ -138,20 +138,20 @@ const Navbar = () => {
                   </>
                 ) : (
                   <>
-                    <div
-                      className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${
-                        credits.isUnlimited
-                          ? "border-[#0CF2A0]/30 bg-[#0CF2A0]/10 text-[#0CF2A0]"
-                          : credits.remaining === 0
-                            ? "border-red-500/30 bg-red-500/10 text-red-400"
-                            : "border-gray-700 bg-white/5 text-gray-300"
-                      }`}
+                    <motion.a
+                      href="/dashboard"
+                      className="group relative flex items-center gap-1.5 rounded-full border border-gray-700/60 bg-white/5 px-3 py-1.5 text-xs font-semibold text-gray-300 transition-colors duration-200 hover:border-[#0CF2A0]/40 hover:bg-[#0CF2A0]/5 hover:text-[#0CF2A0]"
+                      title="Go to Dashboard"
                     >
-                      <Zap className="h-3 w-3" />
-                      {credits.isUnlimited
-                        ? `${credits.planName} (∞)`
-                        : `${credits.remaining}/${credits.uploadLimit} Credits`}
-                    </div>
+                      <LayoutDashboard className="h-3.5 w-3.5" />
+                      <span>Dashboard</span>
+                      <motion.span
+                        className="absolute right-3 bottom-0.5 left-3 h-px origin-left bg-[#0CF2A0]"
+                        initial={{ scaleX: 0 }}
+                        whileHover={{ scaleX: 1 }}
+                        transition={{ duration: 0.25, ease: "easeOut" }}
+                      />
+                    </motion.a>
                     <UserButton />
                   </>
                 )}

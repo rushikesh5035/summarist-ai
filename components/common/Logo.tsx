@@ -1,43 +1,20 @@
-"use client";
+import React from "react";
 
-import React, { useState } from "react";
+import { FileText } from "lucide-react";
 
-import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 interface LogoProps {
   size?: number;
   className?: string;
-  format?: "svg" | "png";
 }
 
-export const Logo: React.FC<LogoProps> = ({
-  size = 24,
-  className = "",
-  format = "svg",
-}) => {
-  const [imgSrc, setImgSrc] = useState(
-    format === "svg" ? "/logo.svg" : "/logo.png"
-  );
-
+export const Logo: React.FC<LogoProps> = ({ size = 24, className = "" }) => {
   return (
-    <Image
-      src={imgSrc}
-      alt="Summarist Logo"
+    <FileText
+      className={cn("text-[#0CF2A0]", className)}
       width={size}
       height={size}
-      className={className}
-      priority
-      quality={100}
-      style={{
-        width: size,
-        height: size,
-        objectFit: "contain",
-      }}
-      onError={() => {
-        if (imgSrc === "/logo.svg") {
-          setImgSrc("/logo.png");
-        }
-      }}
     />
   );
 };

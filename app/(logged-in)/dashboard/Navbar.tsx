@@ -103,7 +103,7 @@ const Navbar = () => {
         <Link href={"/"}>
           <div className="flex shrink-0 items-center">
             <div className="relative flex items-center justify-center">
-              <Logo size={35} />
+              <Logo size={28} />
             </div>
             <span className="ml-1.5 text-xl font-bold tracking-tight text-white">
               Summarist
@@ -120,7 +120,6 @@ const Navbar = () => {
         {/* Right side - Auth Section */}
         <div className="flex min-w-[200px] shrink-0 items-center justify-end gap-4">
           {!isLoaded ? (
-            // Loading skeleton - matches signed in layout
             <>
               <Skeleton className="h-8 w-32 rounded-full" />
               <Skeleton className="h-8 w-8 rounded-full" />
@@ -129,7 +128,6 @@ const Navbar = () => {
             <>
               <SignedIn>
                 {!credits ? (
-                  // Credits loading skeleton
                   <>
                     <Skeleton className="h-8 w-32 rounded-full" />
                     <UserButton />
