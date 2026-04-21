@@ -79,10 +79,10 @@ const Pricing = () => {
     <section className="relative bg-[#0a0a0a] py-24" id="pricing">
       <div className="relative z-10 mx-auto max-w-6xl px-6 md:px-10 lg:px-16">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-80px" }}
           className="mb-16 text-center"
         >
           <span className="mb-4 block text-sm font-semibold tracking-widest text-[#0CF2A0] uppercase">
@@ -102,10 +102,14 @@ const Pricing = () => {
           {plans.map((plan, index) => (
             <motion.div
               key={plan.name}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.12, duration: 0.5 }}
-              viewport={{ once: true }}
+              transition={{
+                delay: index * 0.08,
+                duration: 0.7,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              viewport={{ once: true, margin: "-80px" }}
               whileHover={{ y: -8 }}
               className={`relative rounded-2xl border p-8 ${
                 plan.popular

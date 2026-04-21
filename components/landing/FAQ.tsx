@@ -20,8 +20,8 @@ const FAQ = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true, margin: "-80px" }}
             className="md:sticky md:top-24 md:self-start"
           >
             <span className="mb-4 block text-sm font-semibold tracking-widest text-[#0CF2A0] uppercase">
@@ -36,10 +36,10 @@ const FAQ = () => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true, margin: "-80px" }}
           >
             <Accordion type="single" collapsible className="space-y-0">
               {faqs.map((faq) => (

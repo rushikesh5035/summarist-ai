@@ -13,10 +13,10 @@ const HowItWorks = () => {
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 md:px-10 lg:px-16">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-80px" }}
           className="mb-20 text-center"
         >
           <span className="mb-4 block text-sm font-semibold tracking-widest text-[#0CF2A0] uppercase">
@@ -34,18 +34,22 @@ const HowItWorks = () => {
           <motion.div
             initial={{ scaleX: 0, opacity: 0 }}
             whileInView={{ scaleX: 1, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: "easeInOut" }}
-            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true, margin: "-80px" }}
             className="absolute top-8 right-[20%] left-[20%] hidden h-px origin-left bg-linear-to-r from-transparent via-gray-700 to-transparent md:block"
           />
 
           {steps.map((step, index) => (
             <motion.div
               key={step.step}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.15, duration: 0.5 }}
-              viewport={{ once: true }}
+              transition={{
+                delay: index * 0.1,
+                duration: 0.7,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              viewport={{ once: true, margin: "-80px" }}
               className="group relative text-center"
             >
               <div className="relative mx-auto mb-6 h-16 w-16">

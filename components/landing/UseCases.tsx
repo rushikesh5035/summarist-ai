@@ -21,10 +21,10 @@ const UseCases = () => {
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 md:px-10 lg:px-16">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-80px" }}
           className="mb-14 text-center"
         >
           <span className="mb-4 block text-sm font-semibold tracking-widest text-[#0CF2A0] uppercase">
@@ -44,10 +44,14 @@ const UseCases = () => {
           {cases.map((useCase, index) => (
             <motion.div
               key={useCase.title}
-              initial={{ opacity: 0, y: 30, scale: 0.97 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: index * 0.07, duration: 0.5 }}
-              viewport={{ once: true }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                delay: index * 0.06,
+                duration: 0.7,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              viewport={{ once: true, margin: "-80px" }}
               className={`${useCase.span} group relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-white/8 bg-linear-to-br from-white/4 to-white/1 p-5 backdrop-blur-md transition-all duration-300 hover:border-white/15 hover:shadow-2xl hover:shadow-black/40 md:p-6`}
             >
               <div

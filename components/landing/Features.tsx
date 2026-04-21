@@ -21,8 +21,8 @@ const Features = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="mb-14 text-center"
         >
           <span className="mb-3 block text-sm font-semibold tracking-[0.15em] text-[#0CF2A0] uppercase">
@@ -38,10 +38,10 @@ const Features = () => {
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1, duration: 0.5 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ delay: 0.05, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="group relative overflow-hidden rounded-2xl border border-gray-800/60 bg-linear-to-br from-[#111] to-[#0d0d0d] p-8 md:col-span-7"
           >
             <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[#0CF2A0]/5 blur-3xl transition-all duration-700 group-hover:bg-[#0CF2A0]/10" />
@@ -72,10 +72,10 @@ const Features = () => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.5 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ delay: 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="group relative overflow-hidden rounded-2xl border border-gray-800/60 bg-linear-to-br from-[#111] to-[#0d0d0d] p-8 md:col-span-5"
           >
             <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-purple-500/5 blur-3xl transition-all duration-700 group-hover:bg-purple-500/10" />
@@ -107,10 +107,10 @@ const Features = () => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.5 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ delay: 0.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="group relative flex items-start gap-4 overflow-hidden rounded-2xl border border-gray-800/60 bg-[#111] p-6 md:col-span-4"
           >
             <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-blue-500/5 blur-3xl transition-all duration-700 group-hover:bg-blue-500/10" />
@@ -126,10 +126,10 @@ const Features = () => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.5 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ delay: 0.2, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="group relative flex items-start gap-4 overflow-hidden rounded-2xl border border-gray-800/60 bg-[#111] p-6 md:col-span-4"
           >
             <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-amber-500/5 blur-3xl transition-all duration-700 group-hover:bg-amber-500/10" />
@@ -145,10 +145,10 @@ const Features = () => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5, duration: 0.5 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ delay: 0.25, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="group relative flex items-start gap-4 overflow-hidden rounded-2xl border border-gray-800/60 bg-[#111] p-6 md:col-span-4"
           >
             <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-rose-500/5 blur-3xl transition-all duration-700 group-hover:bg-rose-500/10" />

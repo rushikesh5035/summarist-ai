@@ -20,10 +20,10 @@ const CTA = () => {
       />
       <div className="relative z-10 mx-auto max-w-4xl px-6 text-center md:px-10">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-80px" }}
         >
           <h2 className="mb-6 text-4xl leading-tight font-bold tracking-tight text-white md:text-5xl lg:text-6xl">
             Ready to unlock your

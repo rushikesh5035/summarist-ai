@@ -17,8 +17,8 @@ const Testimonials = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-80px" }}
           className="mx-auto flex max-w-135 flex-col items-center justify-center"
         >
           <span className="block text-sm font-semibold tracking-widest text-[#0CF2A0] uppercase">

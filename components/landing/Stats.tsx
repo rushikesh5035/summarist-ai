@@ -47,10 +47,14 @@ const Stats = () => {
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              viewport={{ once: true }}
+              transition={{
+                delay: index * 0.08,
+                duration: 0.7,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              viewport={{ once: true, margin: "-80px" }}
               className="rounded-2xl border border-gray-800/40 bg-[#111]/60 p-4 text-center"
             >
               <div className="mb-1 text-4xl font-bold text-white tabular-nums md:text-5xl">
