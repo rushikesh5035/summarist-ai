@@ -31,7 +31,7 @@ export default async function Layout({
 
   return (
     <>
-      <div className="relative min-h-screen overflow-hidden bg-[#111111] text-gray-300">
+      <div className="relative min-h-screen bg-[#111111] text-gray-300">
         <Navbar />
         {children}
       </div>
