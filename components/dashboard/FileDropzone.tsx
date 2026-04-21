@@ -23,9 +23,10 @@ export default function FileDropzone({
   return (
     <motion.div
       key="dropzone"
-      initial={{ opacity: 0, scale: 0.95 }}
+      initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
+      exit={{ opacity: 0, scale: 0.97 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}

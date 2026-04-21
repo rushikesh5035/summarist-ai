@@ -78,13 +78,13 @@ export default function UploadPage({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, x: -30 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="mb-12 text-center">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#0CF2A0]/20 bg-[#0CF2A0]/10 px-4 py-1.5"
         >
           <Sparkles className="h-3.5 w-3.5 text-[#0CF2A0]" />
@@ -162,7 +162,7 @@ export default function UploadPage({
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="mt-8 text-center"
         >
           <Button

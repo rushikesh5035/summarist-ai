@@ -20,7 +20,7 @@ export default function ModeSelector({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: 0.15 }}
+      transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
       className="mx-auto mt-4 max-w-3xl"
     >
       <p className="mb-4 text-sm font-medium text-gray-400">
