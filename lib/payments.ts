@@ -24,7 +24,7 @@ export const handleCheckoutSessionCompleted = async ({
       .where(eq(users.email, customer.email));
 
     if (!user) {
-      console.log("Now user found for email: ", customer.email);
+      console.error("No user found for email:", customer.email);
       return;
     }
 
