@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 import { asc, eq, sql } from "drizzle-orm";
 
 import { db } from "@/db/drizzle";
@@ -29,10 +31,10 @@ export async function createChatPdf({
 }
 
 // Get a single chat pdf by its ID
-export async function getChatPdfById(id: string) {
+export const getChatPdfById = cache(async function getChatPdfById(id: string) {
   const [record] = await db.select().from(chatPdfs).where(eq(chatPdfs.id, id));
   return record ?? null;
-}
+});
 
 // Update chat pdf status
 export async function updateChatPdfStatus(id: string, status: ChatPdfStatus) {
