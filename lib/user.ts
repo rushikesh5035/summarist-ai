@@ -1,14 +1,13 @@
+import { cache } from "react";
+
 import { User as ClerkUser, currentUser } from "@clerk/nextjs/server";
 import { and, count, eq, sql } from "drizzle-orm";
 
 import { db } from "@/db/drizzle";
-import { pdfSummaries, subscriptions, users } from "@/db/schema";
+import { chatPdfs, pdfSummaries, subscriptions, users } from "@/db/schema";
 import { PLAN_LIMITS, pricingPlans } from "@/utils/constants";
 
-/**
- * Called on every logged-in page
- * Create a minimal user row the 1st time a clerk user signs in.
- */
+// Called on every logged-in page. Create a minimal user row the 1st time a clerk user signs in.
 export const ensureFreeUserExists = async (user: ClerkUser) => {
   try {
     const email = user.emailAddresses[0].emailAddress;
@@ -28,6 +27,7 @@ export const ensureFreeUserExists = async (user: ClerkUser) => {
   }
 };
 
+// Gets the user id from the database
 export const getDbUserId = async (clerkId: string): Promise<string | null> => {
   const [user] = await db
     .select({ id: users.id })
@@ -37,10 +37,8 @@ export const getDbUserId = async (clerkId: string): Promise<string | null> => {
   return user?.id ?? null;
 };
 
-/**
- * Gets the active subscription for a user
- */
-export const getActiveSubscription = async (dbUserId: string) => {
+// Gets the active subscription for a user.
+export const getActiveSubscription = cache(async (dbUserId: string) => {
   const [sub] = await db
     .select()
     .from(subscriptions)
@@ -52,11 +50,9 @@ export const getActiveSubscription = async (dbUserId: string) => {
     );
 
   return sub ?? null;
-};
+});
 
-/**
- * Returns true if user has a paid, active subscription.
- */
+// Returns true if user has a paid, active subscription.
 export const hasActivePlan = async (dbUserId: string): Promise<boolean> => {
   const sub = await getActiveSubscription(dbUserId);
   return sub !== null;
@@ -66,25 +62,36 @@ export const hasReachedUploadLimit = async (
   clerkId: string,
   dbUserId: string
 ) => {
-  // Count summaries this month
-  const [result] = await db.select({ count: count() }).from(pdfSummaries)
-    .where(sql`
-      ${pdfSummaries.userId} = ${dbUserId}
-      AND ${pdfSummaries.createdAt} >= date_trunc('month', NOW())
-    `);
-  const uploadCount = Number(result?.count ?? 0);
-
-  // find plan from active subscription
+  // Resolve plan once — shared for both summary and chat checks
   const sub = await getActiveSubscription(dbUserId);
   const planId =
     pricingPlans.find((p) => p.priceId === sub?.priceId)?.id ?? "free";
 
-  const limit = PLAN_LIMITS[planId]?.summaries ?? 2;
+  // Count PDF summaries uploaded this month
+  const [summaryResult] = await db.select({ count: count() }).from(pdfSummaries)
+    .where(sql`
+      ${pdfSummaries.userId} = ${dbUserId}
+      AND ${pdfSummaries.createdAt} >= date_trunc('month', NOW())
+    `);
+  const uploadCount = Number(summaryResult?.count ?? 0);
+  const uploadLimit = PLAN_LIMITS[planId]?.summaries ?? 2;
+
+  // Count chat PDFs created this month
+  const [chatResult] = await db.select({ count: count() }).from(chatPdfs)
+    .where(sql`
+      ${chatPdfs.userId} = ${dbUserId}
+      AND ${chatPdfs.createdAt} >= date_trunc('month', NOW())
+    `);
+  const chatCount = Number(chatResult?.count ?? 0);
+  const chatLimit = PLAN_LIMITS[planId]?.chats ?? 2;
 
   return {
-    hasReachedLimit: uploadCount >= limit,
-    uploadLimit: limit,
+    hasReachedLimit: uploadCount >= uploadLimit,
+    uploadLimit,
     uploadCount,
     planId,
+    chatCount,
+    chatLimit,
+    hasReachedChatLimit: chatCount >= chatLimit,
   };
 };
