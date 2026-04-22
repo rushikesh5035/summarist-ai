@@ -65,7 +65,7 @@ export default function SummaryCollapsibleSections({
             >
               <button
                 onClick={() => onToggle(i)}
-                className="flex w-full items-center justify-between bg-transparent p-5 text-left transition-colors hover:bg-white/2"
+                className="flex w-full items-center justify-between bg-transparent px-5 py-3 text-left transition-colors hover:bg-white/2"
               >
                 <div className="flex items-center gap-3 bg-transparent">
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#0CF2A0]/10 text-xs font-bold text-[#0CF2A0]">

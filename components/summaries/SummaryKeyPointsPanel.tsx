@@ -17,7 +17,7 @@ export default function SummaryKeyPointsPanel({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="mb-6 rounded-xl border border-gray-700/60 bg-[#1a1a1a] p-6"
+      className="mb-6 rounded-xl border border-gray-700/60 bg-[#1a1a1a] p-5"
     >
       <div className="mb-4 flex items-center gap-2">
         <List className="h-5 w-5 text-[#0CF2A0]" />
