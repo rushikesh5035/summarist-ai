@@ -1,5 +1,3 @@
-import { isDev } from "@/utils/helper";
-
 export const plans = [
   {
     id: "free",
@@ -16,8 +14,7 @@ export const plans = [
     buttonText: "Start Free",
     popular: false,
     accent: false,
-    paymentLink: null,
-    priceId: null,
+    productId: null,
   },
   {
     id: "pro",
@@ -36,10 +33,7 @@ export const plans = [
     buttonText: "Go Pro",
     popular: true,
     accent: true,
-    paymentLink: isDev
-      ? "https://buy.stripe.com/test_14AeV68Hz0ThbWn6l7dUY02"
-      : "https://buy.stripe.com/YOUR_PRO_LINK",
-    priceId: isDev ? "price_1T97Wv2LylM2AQ375vrRpJEs" : "price_LIVE_PRO_ID",
+    productId: "pro",
   },
   {
     id: "unlimited",
@@ -58,11 +52,6 @@ export const plans = [
     buttonText: "Go Unlimited",
     popular: false,
     accent: false,
-    paymentLink: isDev
-      ? "https://buy.stripe.com/test_00wcMY0b3gSf0dFfVHdUY03"
-      : "https://buy.stripe.com/YOUR_UNLIMITED_LINK",
-    priceId: isDev
-      ? "price_1T97ZV2LylM2AQ37pbH5KH8f"
-      : "price_LIVE_UNLIMITED_ID",
+    productId: "unlimited",
   },
 ];

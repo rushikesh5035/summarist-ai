@@ -22,6 +22,13 @@
       "when": 1774243809715,
       "tag": "0002_cold_sir_ram",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1776799497526,
+      "tag": "0003_boring_hiroim",
+      "breakpoints": true
     }
   ]
 }

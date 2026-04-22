@@ -5,7 +5,11 @@ import { and, count, eq, sql } from "drizzle-orm";
 
 import { db } from "@/db/drizzle";
 import { chatPdfs, pdfSummaries, subscriptions, users } from "@/db/schema";
-import { PLAN_LIMITS, pricingPlans } from "@/utils/constants";
+import { PLAN_LIMITS } from "@/utils/constants";
+import {
+  POLAR_PRO_PRODUCT_ID,
+  POLAR_UNLIMITED_PRODUCT_ID,
+} from "@/utils/polar";
 
 // Called on every logged-in page. Create a minimal user row the 1st time a clerk user signs in.
 export const ensureFreeUserExists = async (user: ClerkUser) => {
@@ -58,14 +62,21 @@ export const hasActivePlan = async (dbUserId: string): Promise<boolean> => {
   return sub !== null;
 };
 
+// Resolve plan ID from polar product ID
+const resolvePlanId = (polarProductId: string | null | undefined): string => {
+  if (!polarProductId) return "free";
+  if (polarProductId === POLAR_PRO_PRODUCT_ID) return "pro";
+  if (polarProductId === POLAR_UNLIMITED_PRODUCT_ID) return "unlimited";
+  return "free";
+};
+
 export const hasReachedUploadLimit = async (
-  clerkId: string,
+  _clerkId: string,
   dbUserId: string
 ) => {
   // Resolve plan once — shared for both summary and chat checks
   const sub = await getActiveSubscription(dbUserId);
-  const planId =
-    pricingPlans.find((p) => p.priceId === sub?.priceId)?.id ?? "free";
+  const planId = resolvePlanId(sub?.polarProductId);
 
   // Count PDF summaries uploaded this month
   const [summaryResult] = await db.select({ count: count() }).from(pdfSummaries)

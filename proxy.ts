@@ -8,6 +8,8 @@ const isProtectedRoute = createRouteMatcher([
   "/summaries(.*)",
   "/chat-pdf(.*)",
   "/api/checkout(.*)",
+  "/api/polar-checkout(.*)",
+  "/api/customer-portal(.*)",
   "/api/chat(.*)",
   "/api/subscription(.*)",
 ]);

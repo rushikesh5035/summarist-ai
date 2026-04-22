@@ -1,47 +1,50 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { currentUser } from "@clerk/nextjs/server";
-import Stripe from "stripe";
+import {
+  POLAR_PRO_PRODUCT_ID,
+  POLAR_UNLIMITED_PRODUCT_ID,
+} from "@/utils/polar";
 
-import { ORIGIN_URL } from "@/utils/helper";
+const productAliasMap: Record<string, string> = {
+  pro: POLAR_PRO_PRODUCT_ID,
+  unlimited: POLAR_UNLIMITED_PRODUCT_ID,
+};
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+export const GET = async (req: NextRequest) => {
+  const url = new URL(req.url);
+  const productParam = url.searchParams.get("products");
+  const customerEmail = url.searchParams.get("customerEmail");
 
-export const POST = async (req: NextRequest) => {
-  try {
-    const { priceId } = await req.json();
-
-    if (!priceId || typeof priceId !== "string") {
-      return NextResponse.json(
-        { error: "priceId is required" },
-        { status: 400 }
-      );
-    }
-
-    // Attach the signed-in user's email so Stripe pre-fills it
-    const user = await currentUser();
-    const email = user?.emailAddresses[0]?.emailAddress;
-
-    const sessionParams: Stripe.Checkout.SessionCreateParams = {
-      mode: "subscription",
-      payment_method_types: ["card"],
-      line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${ORIGIN_URL}/?payment=success`,
-      cancel_url: `${ORIGIN_URL}/#pricing`,
-    };
-
-    if (email) {
-      sessionParams.customer_email = email;
-    }
-
-    const session = await stripe.checkout.sessions.create(sessionParams);
-
-    return NextResponse.json({ url: session.url });
-  } catch (error) {
-    console.error("Checkout session error:", error);
+  if (!productParam) {
     return NextResponse.json(
-      { error: "Failed to create checkout session" },
-      { status: 500 }
+      { error: "products query param is required" },
+      { status: 400 }
     );
   }
+
+  const resolvedProductId = productAliasMap[productParam] ?? productParam;
+  if (!resolvedProductId) {
+    return NextResponse.json(
+      { error: "Invalid products query param" },
+      { status: 400 }
+    );
+  }
+
+  const forwardedProto = req.headers.get("x-forwarded-proto");
+  const forwardedHost = req.headers.get("x-forwarded-host");
+  const host = req.headers.get("host");
+  const origin =
+    forwardedProto && forwardedHost
+      ? `${forwardedProto}://${forwardedHost}`
+      : host
+        ? `${url.protocol}//${host}`
+        : url.origin;
+
+  const redirectUrl = new URL("/api/polar-checkout", origin);
+  redirectUrl.searchParams.set("products", resolvedProductId);
+  if (customerEmail) {
+    redirectUrl.searchParams.set("customerEmail", customerEmail);
+  }
+
+  return NextResponse.redirect(redirectUrl);
 };
