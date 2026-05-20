@@ -42,19 +42,19 @@ const Features = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ delay: 0.05, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="group relative overflow-hidden rounded-2xl border border-gray-800/60 bg-linear-to-br from-[#111] to-[#0d0d0d] p-8 md:col-span-7"
+            className="group relative overflow-hidden rounded-2xl border border-gray-800/60 bg-linear-to-br from-[#111] to-[#0d0d0d] p-6 md:col-span-7"
           >
             <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[#0CF2A0]/5 blur-3xl transition-all duration-700 group-hover:bg-[#0CF2A0]/10" />
             <div className="relative z-10">
               <div className="mb-4 flex items-center gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#0CF2A0]/20 bg-[#0CF2A0]/10">
-                  <FileText className="h-6 w-6 text-[#0CF2A0]" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#0CF2A0]/20 bg-[#0CF2A0]/10">
+                  <FileText className="h-5 w-5 text-[#0CF2A0]" />
                 </div>
-                <h3 className="text-2xl font-bold text-white">
+                <h3 className="text-xl font-bold text-white">
                   Instant Summaries
                 </h3>
               </div>
-              <p className="mb-6 leading-relaxed text-gray-400">
+              <p className="mb-4 text-gray-400">
                 Upload a 100-page report and get a structured summary with key
                 points, insights, and action items in under 10 seconds.
               </p>
@@ -76,17 +76,17 @@ const Features = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ delay: 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="group relative overflow-hidden rounded-2xl border border-gray-800/60 bg-linear-to-br from-[#111] to-[#0d0d0d] p-8 md:col-span-5"
+            className="group relative overflow-hidden rounded-2xl border border-gray-800/60 bg-linear-to-br from-[#111] to-[#0d0d0d] p-6 md:col-span-5"
           >
             <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-purple-500/5 blur-3xl transition-all duration-700 group-hover:bg-purple-500/10" />
             <div className="relative z-10">
               <div className="mb-4 flex items-center gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-purple-500/20 bg-purple-500/10">
-                  <MessageSquare className="h-6 w-6 text-purple-400" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-purple-500/20 bg-purple-500/10">
+                  <MessageSquare className="h-5 w-5 text-purple-400" />
                 </div>
-                <h3 className="text-2xl font-bold text-white">Chat with PDF</h3>
+                <h3 className="text-xl font-bold text-white">Chat with PDF</h3>
               </div>
-              <p className="mb-6 leading-relaxed text-gray-400">
+              <p className="mb-4 text-gray-400">
                 Ask questions in plain language. Get precise answers with page
                 references.
               </p>
@@ -95,7 +95,7 @@ const Features = () => {
                   (q) => (
                     <div
                       key={q}
-                      className="flex items-center gap-2 rounded-xl border border-gray-700/50 bg-white/5 px-3 py-2 text-xs text-gray-300"
+                      className="flex items-center gap-2 rounded-xl border border-gray-700/50 bg-white/5 px-3 py-1 text-xs text-gray-300"
                     >
                       <Brain className="h-3.5 w-3.5 shrink-0 text-purple-400" />
                       {q}

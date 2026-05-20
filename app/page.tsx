@@ -22,7 +22,6 @@ export default function Home() {
       <Stats />
       <HowItWorks />
       <UseCases />
-      <Testimonials />
       <Pricing />
       <FAQ />
       <CTA />

@@ -26,6 +26,9 @@ interface Dot {
   currentRadius: number;
 }
 
+const DEMO_VIDEO_URL = process.env.NEXT_PUBLIC_DEMO_VIDEO_URL;
+const DEMO_POSTER_URL = "/videos/summarist-demo-poster.png";
+
 const HeroSection: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameId = useRef<number | null>(null);
@@ -359,47 +362,50 @@ const HeroSection: React.FC = () => {
           >
             <div className="relative overflow-hidden rounded-2xl border border-gray-800/60 bg-[#111] shadow-2xl shadow-black/50">
               {/* Browser Chrome */}
-              <div className="flex items-center border-b border-gray-800/50 bg-[#0d0d0d] px-4 py-3">
+              <div className="flex items-center border-b border-gray-800/50 bg-[#0d0d0d] px-4 py-2">
                 <div className="flex space-x-2">
                   <div className="h-3 w-3 rounded-full bg-[#FF5F57]" />
                   <div className="h-3 w-3 rounded-full bg-[#FEBC2E]" />
                   <div className="h-3 w-3 rounded-full bg-[#28C840]" />
                 </div>
                 <div className="mx-4 flex-1">
-                  <div className="rounded-lg border border-gray-800/40 bg-[#1a1a1a] px-4 py-1.5 text-center text-xs text-gray-500">
+                  <div className="rounded-lg border border-gray-800/40 bg-[#1a1a1a] px-4 py-1 text-center text-xs text-gray-500">
                     summarist.ai/dashboard
                   </div>
                 </div>
               </div>
               {/* Video Area */}
-              <div className="relative flex aspect-video items-center justify-center bg-linear-to-br from-[#0d0d0d] via-[#111] to-[#0d0d0d]">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(12,242,160,0.06),transparent_50%),radial-gradient(circle_at_70%_60%,rgba(147,51,234,0.05),transparent_50%)]" />
-                {/* Play Button */}
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="group relative z-10 flex h-20 w-20 cursor-pointer items-center justify-center rounded-full border-2 border-[#0CF2A0]/30 bg-[#0CF2A0]/10 backdrop-blur-sm"
-                >
-                  <div className="ml-1.5 h-0 w-0 border-t-11 border-b-11 border-l-18 border-t-transparent border-b-transparent border-l-[#0CF2A0] transition-colors group-hover:border-l-white" />
-                </motion.button>
-                {/* Decorative Elements */}
-                <div className="absolute bottom-6 left-6 text-xs text-gray-600">
-                  <span className="font-medium text-[#0CF2A0]/60">00:00</span> /
-                  02:34
-                </div>
-                <div className="absolute right-6 bottom-6 flex gap-3">
-                  <div className="h-5 w-5 rounded border border-gray-700/50 bg-white/5" />
-                  <div className="h-5 w-5 rounded border border-gray-700/50 bg-white/5" />
-                </div>
-                {/* Progress Bar */}
-                <div className="absolute right-0 bottom-0 left-0 h-1 bg-gray-800/50">
-                  <div className="h-full w-0 rounded-r bg-[#0CF2A0]/60" />
+              <div className="relative aspect-video overflow-hidden bg-[#0d0d0d]">
+                {DEMO_VIDEO_URL ? (
+                  <video
+                    className="h-full w-full object-cover"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    poster={DEMO_POSTER_URL}
+                    aria-label="Summarist.ai product demo"
+                  >
+                    <source src={DEMO_VIDEO_URL} type="video/mp4" />
+                  </video>
+                ) : (
+                  <img
+                    src={DEMO_POSTER_URL}
+                    alt="Summarist.ai product demo preview"
+                    className="h-full w-full object-cover"
+                  />
+                )}
+
+                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_70%,rgba(10,10,10,0.35)),radial-gradient(circle_at_30%_40%,rgba(12,242,160,0.08),transparent_45%)]" />
+                <div className="pointer-events-none absolute bottom-4 left-4 rounded-full border border-[#0CF2A0]/25 bg-black/40 px-3 py-1 text-xs font-medium text-[#0CF2A0] backdrop-blur-sm">
+                  Live product preview
                 </div>
               </div>
             </div>
           </motion.div>
 
-          {/* ── Scrolling Marquee ── */}
+          {/* Scrolling Marquee */}
           <ScrollingMarquee />
         </div>
       </main>
