@@ -4,14 +4,6 @@
 
 ![Summarist.ai Preview](./public/preview.png)
 
-## ✨ Overview
-
-Summarist.ai turns dense PDF documents into two useful workflows:
-
-- Structured AI summaries with title, read time, overview, key points, sections, and action items.
-- Context-aware PDF chat powered by retrieval-augmented generation.
-
-The app includes authentication, usage limits, subscriptions, background processing, realtime progress updates, export tools, and a unified vault for saved summaries and chat sessions.
 
 ## 🚀 Features
 
