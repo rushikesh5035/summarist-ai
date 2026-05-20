@@ -1,81 +1,85 @@
 # Summarist.ai 📝🚀
 
-**AI-powered SaaS application that transforms PDFs into clear, structured visual summaries and enables intelligent chat with your documents.**
+**AI-powered SaaS for understanding PDFs faster. Upload a document, generate a structured summary, or chat with the PDF using a RAG pipeline backed by Gemini embeddings and pgvector.**
 
 ![Summarist.ai Preview](./public/preview.png)
 
-## 🌟 Features
+## ✨ Overview
+
+Summarist.ai turns dense PDF documents into two useful workflows:
+
+- Structured AI summaries with title, read time, overview, key points, sections, and action items.
+- Context-aware PDF chat powered by retrieval-augmented generation.
+
+The app includes authentication, usage limits, subscriptions, background processing, realtime progress updates, export tools, and a unified vault for saved summaries and chat sessions.
+
+## 🚀 Features
 
 ### Core Features
 
-- 🤖 **AI-Powered Summarization**: Generate concise, structured summaries
-- 💬 **Chat with PDF**: Ask questions and get intelligent answers from your documents
-- 📊 **Interactive Dashboard**: Manage all your summaries and chat sessions in one place
-- 📁 **Vault System**: Access your complete history of processed PDFs
-- 📄 **Export Options**: Download summaries as Plain Text, Markdown, or Microsoft Word documents
+- 🤖 **AI-Powered Summaries**: Turn PDFs into structured summaries with key points, sections, and action items.
+- 💬 **Chat with PDF**: Ask questions and get context-aware answers from your documents.
+- 📚 **Unified Vault**: Access all saved summaries and PDF chats in one place.
+- ⚡ **Real-time Processing**: Track PDF parsing, chunking, embedding, and indexing live.
+- 📤 **Export Options**: Download summaries as TXT, Markdown, or Word-compatible documents.
+- 💳 **Subscription Plans**: Free, Pro, and Unlimited tiers with monthly usage limits.
+- 🔒 **Secure Authentication**: Protected dashboard and user data powered by Clerk.
 
 ### Technical Features
 
-- 🔒 **Secure Authentication**: Email/password and OAuth (Google, GitHub) via Clerk
-- 💳 **Subscription Management**: Three tiers (Free, Pro $5/month, Unlimited $20/month) with Stripe integration
-- 📤 **Robust File Upload**: Support for PDFs up to 32MB with UploadThing
-- ⚡ **Real-time Processing**: Async background jobs with Inngest for efficient processing
-- 🔍 **Semantic Search**: Vector embeddings with pgvector for accurate document retrieval
-- 🎨 **Modern UI/UX**: Dark theme with glassmorphism effects, responsive design, smooth animations
-- 📱 **Mobile Optimized**: Fully responsive across all devices
+- 🔍 **RAG Pipeline**: Semantic document retrieval using Gemini embeddings and pgvector.
+- 🧠 **Vector Search**: 3072-dimensional embeddings for accurate PDF chunk matching.
+- 🛠️ **Background Jobs**: Durable PDF processing with Inngest.
+- 📡 **Realtime Updates**: Inngest Realtime with polling fallback for reliability.
+- 🧾 **Billing Webhooks**: Polar subscription events synced with the database.
 
----
+## 🛠️ Tech Stack
 
-## 🚀 Tech Stack
+### 💻 Frontend
 
-### Frontend
+- **Next.js 16** with App Router and React Server Components
+- **React 19**
+- **TypeScript 5**
+- **Tailwind CSS 4**
+- **Shadcn UI / Radix UI**
+- **Lucide React**
+- **Framer Motion / Motion**
+- **Lenis**
+- **Sonner**
+- **Zod**
 
-- **Framework**: [Next.js 16](https://nextjs.org/) (App Router, React Server Components)
-- **UI Library**: [React 19](https://react.dev/)
-- **Language**: [TypeScript 5](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
-- **Component Library**: [ShadCN UI](https://ui.shadcn.com/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **Form Handling**: [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
+### 🧱 Backend & Infrastructure
 
-### Backend & Infrastructure
+- **NeonDB Serverless Postgres**
+- **Drizzle ORM**
+- **pgvector**
+- **Clerk**
+- **UploadThing**
+- **Polar**
+- **Inngest**
+- **Vercel-ready serverless runtime**
 
-- **Runtime**: Node.js (Serverless on Vercel)
-- **Database**: [PostgreSQL](https://www.postgresql.org/) (NeonDB Serverless)
-- **ORM**: [Drizzle ORM](https://orm.drizzle.team/)
-- **Vector Extension**: [pgvector](https://github.com/pgvector/pgvector)
-- **Authentication**: [Clerk](https://clerk.com/)
-- **Payments**: [Stripe](https://stripe.com/)
-- **File Upload**: [UploadThing](https://uploadthing.com/)
-- **Background Jobs**: [Inngest](https://www.inngest.com/)
+### 🧠 AI
 
-### AI & Machine Learning
+- **Google Gemini 2.5 Flash** for summary generation and chat responses
+- **Gemini Embedding 001** for 3072-dimensional text embeddings
+- **LangChain PDFLoader** for PDF parsing
+- **LangChain CharacterTextSplitter** for document chunking
 
-- **AI Provider**: [Google Gemini AI](https://ai.google.dev/)
-  - **Gemini 2.5 Flash**: Summarization & Chat
-  - **Embedding-001**: 3072-dimensional vector embeddings
-- **AI Framework**: [LangChain](https://js.langchain.com/)
-  - PDF parsing and text splitting
-  - Document loaders and text splitters
-- **RAG Architecture**: Custom implementation with pgvector
+## 🚦 Getting Started
 
-### DevOps & Tooling
+### ✅ Prerequisites
 
-- **Deployment**: [Vercel](https://vercel.com/)
-- **Version Control**: Git + GitHub
-- **Package Manager**: npm
-- **Linting**: ESLint + Prettier
-- **Git Hooks**: Husky + lint-staged
-- **Database CLI**: Drizzle Kit
+- Node.js 20+
+- npm or yarn
+- A Neon Postgres database with pgvector enabled
+- Clerk app
+- UploadThing app
+- Google Gemini API key
+- Inngest account
+- Polar account/products
 
----
-
-## 🛠️ Getting Started
-
-### Installation
-
-#### 1. Clone the Repository
+#### 1. Clone The Repository
 
 ```bash
 git clone https://github.com/rushikesh5035/summarist-ai.git
@@ -84,84 +88,128 @@ cd summarist-ai
 
 #### 2. Install Dependencies
 
+Using npm:
+
 ```bash
-bun install
+npm install
 ```
 
-#### 3. Set Up Environment Variables
+Or using yarn:
 
-Create a `.env` file in the root directory:
+```bash
+yarn install
+```
+
+#### 3. Configure Environment Variables
+
+Create a `.env` file:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` with your credentials (see [Environment Variables](#-environment-variables) section below):
+Required variables:
 
 ```bash
-# Database (NeonDB)
+# App
+NODE_ENV=development
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Database
 DATABASE_URL=postgresql://user:password@host/database?sslmode=require
 
-# Clerk Authentication
+# Clerk
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 CLERK_SECRET_KEY=sk_test_...
 CLERK_WEBHOOK_SECRET=whsec_...
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
 
-# Google Gemini AI
+# Google Gemini
 GEMINI_API_KEY=AIza...
 
 # UploadThing
 UPLOADTHING_TOKEN=...
 
-# Stripe
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-
 # Inngest
-INNGEST_EVENT_KEY=your_inngest_event_key
-INNGEST_SIGNING_KEY=your_inngest_signing_key
+INNGEST_EVENT_KEY=...
+INNGEST_SIGNING_KEY=...
 
-# Application
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-NODE_ENV=development
+# Polar sandbox, used when NODE_ENV is not production
+POLAR_SANDBOX_ACCESS_TOKEN=...
+POLAR_SANDBOX_WEBHOOK_SECRET=...
+POLAR_SANDBOX_PRO_PRODUCT_ID=prod_...
+POLAR_SANDBOX_UNLIMITED_PRODUCT_ID=prod_...
+
+# Polar production, used when NODE_ENV=production
+POLAR_ACCESS_TOKEN=...
+POLAR_WEBHOOK_SECRET=...
+POLAR_PRO_PRODUCT_ID=prod_...
+POLAR_UNLIMITED_PRODUCT_ID=prod_...
 ```
 
-#### 4. Set Up Database
+#### 4. Set Up The Database
 
-Push the database schema to your NeonDB instance:
+Push the schema:
 
 ```bash
 npm run db:push
 ```
 
-Optional: Open Drizzle Studio to view your database:
+Open Drizzle Studio if needed:
 
 ```bash
 npm run db:studio
 ```
 
-#### 5. Run Development Server
+#### 5. Run The App
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000).
 
-#### 6. Configure Webhooks (Local Development)
+## 🔗 Webhooks
 
-For local webhook testing, use ngrok or similar tunneling service:
+For local webhook testing, expose the local server with ngrok or a similar tunnel:
 
 ```bash
-# Install ngrok
-npm install -g ngrok
-
-# Create tunnel
 ngrok http 3000
-
-# Use the ngrok URL for webhook endpoints:
-# https://your-ngrok-url.ngrok.io/api/webhooks/stripe
-# https://your-ngrok-url.ngrok.io/api/webhooks/clerk
 ```
+
+Configure these endpoints:
+
+- Clerk: `https://your-ngrok-url.ngrok.io/api/webhooks/clerk`
+- Polar: `https://your-ngrok-url.ngrok.io/api/webhooks/polar`
+- Inngest: `https://your-ngrok-url.ngrok.io/api/inngest`
+
+## 📁 Project Structure
+
+```text
+actions/              Server actions for upload, summaries, chat, and credits
+app/                  Next.js App Router routes, layouts, API routes, webhooks
+components/           Landing, dashboard, chat, summary, vault, and UI components
+config/               Site metadata and SEO config
+contexts/             App providers
+data/                 Landing-page content
+db/                   Drizzle client, schema, and migrations
+hooks/                Shared React hooks
+inngest/              Inngest client, realtime channels, and background functions
+lib/                  AI, database, user, payment, summary, and chat helpers
+public/               Static assets and social images
+utils/                Constants, prompts, exports, formatting, UploadThing helpers
+```
+
+## 📝 Notes
+
+- PDF uploads are limited to 32MB.
+- Chat PDF processing is asynchronous and may take time for larger documents.
+- The app uses high numeric limits for the Unlimited plan internally.
+- Production deployments should configure Clerk, Polar, UploadThing, Inngest, and database environment variables in the hosting provider.
+
+## 👤 Author
+
+Built and maintained by Rushikesh Tele.

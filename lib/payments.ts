@@ -1,9 +1,7 @@
-import { Polar } from "@polar-sh/sdk";
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db/drizzle";
 import { subscriptions, users } from "@/db/schema";
-import { POLAR_ACCESS_TOKEN, POLAR_SERVER } from "@/utils/polar";
 
 interface PolarSubscriptionPayload {
   data: {

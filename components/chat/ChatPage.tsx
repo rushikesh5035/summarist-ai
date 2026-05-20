@@ -133,7 +133,6 @@ const ChatPage: React.FC<ChatPageProps> = ({ fileName, chatId }) => {
       console.log("[ChatPage] Realtime subscription active");
       stopPollingFallback();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   // Polling fallback function
@@ -289,7 +288,6 @@ const ChatPage: React.FC<ChatPageProps> = ({ fileName, chatId }) => {
         })();
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [latestData]);
 
   useEffect(() => {

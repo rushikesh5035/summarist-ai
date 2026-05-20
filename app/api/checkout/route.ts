@@ -30,17 +30,10 @@ export const GET = async (req: NextRequest) => {
     );
   }
 
-  const forwardedProto = req.headers.get("x-forwarded-proto");
-  const forwardedHost = req.headers.get("x-forwarded-host");
-  const host = req.headers.get("host");
-  const origin =
-    forwardedProto && forwardedHost
-      ? `${forwardedProto}://${forwardedHost}`
-      : host
-        ? `${url.protocol}//${host}`
-        : url.origin;
-
-  const redirectUrl = new URL("/api/polar-checkout", origin);
+  // Avoid trusting host / forwarded headers for redirects.
+  // Prefer a configured canonical base URL, otherwise fall back to request origin.
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? req.nextUrl.origin;
+  const redirectUrl = new URL("/api/polar-checkout", baseUrl);
   redirectUrl.searchParams.set("products", resolvedProductId);
   if (customerEmail) {
     redirectUrl.searchParams.set("customerEmail", customerEmail);

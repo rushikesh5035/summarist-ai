@@ -54,13 +54,31 @@ export async function embedText(text: string): Promise<number[]> {
   return result.embedding.values;
 }
 
-// Embeds multiple texts in a batch, rate limit friendly
-export async function embedBatch(texts: string[]): Promise<number[][]> {
-  const embeddings: number[][] = [];
+// Old: Sequential embedding (slow for large PDFs)
+// export async function embedBatch(texts: string[]): Promise<number[][]> {
+//   const embeddings: number[][] = [];
+//   for (const text of texts) {
+//     const embedding = await embedText(text);
+//     embeddings.push(embedding);
+//   }
+//   return embeddings;
+// }
 
-  for (const text of texts) {
-    const embedding = await embedText(text);
-    embeddings.push(embedding);
+// Embeds multiple texts in parallel batches, rate limit friendly
+const EMBED_CONCURRENCY = 5;
+
+export async function embedBatch(texts: string[]): Promise<number[][]> {
+  const embeddings: number[][] = new Array(texts.length);
+
+  for (let i = 0; i < texts.length; i += EMBED_CONCURRENCY) {
+    const batch = texts.slice(i, i + EMBED_CONCURRENCY);
+    const results = await Promise.all(batch.map((text) => embedText(text)));
+
+    // Place results at the correct indices to preserve order
+    results.forEach((embedding, j) => {
+      embeddings[i + j] = embedding;
+    });
   }
+
   return embeddings;
 }

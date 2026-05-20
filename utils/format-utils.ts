@@ -1,12 +1,13 @@
 export function formatFileNameAsTitle(fileName: string) {
   const withoutExtension = fileName.replace(/\.[^/.]+$/, "");
   const withSpaces = withoutExtension
-    .replace(/[-_]+/g, "")
+    .replace(/[-_]+/g, " ")
     .replace(/([a-z])([A-Z])/g, "$1 $2");
 
   return withSpaces
-    .split("")
+    .split(" ")
+    .filter((word) => word.length > 0)
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join("")
+    .join(" ")
     .trim();
 }
