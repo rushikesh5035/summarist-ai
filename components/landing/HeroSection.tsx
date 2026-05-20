@@ -15,7 +15,6 @@ import RotatingText from "../common/RotatingText";
 import ShinyText from "../common/ShinyText";
 import ScrollingMarquee from "./ScrollingMarquee";
 
-// ── Dot Grid Canvas ──────────────────────────────
 interface Dot {
   x: number;
   y: number;
@@ -27,7 +26,6 @@ interface Dot {
   currentRadius: number;
 }
 
-// ── Main Component ──────────────────────────────
 const HeroSection: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameId = useRef<number | null>(null);
@@ -271,13 +269,10 @@ const HeroSection: React.FC = () => {
         }}
       />
 
-      {/* ── Navbar ── */}
       <Navbar />
 
-      {/* ── Hero Content ── */}
       <main className="relative z-10 pt-35 pb-8">
         <div className="mx-auto max-w-6xl px-6 md:px-10 lg:px-16">
-          {/* Top Badge */}
           <motion.div
             variants={bannerVariants}
             initial="hidden"
@@ -294,7 +289,6 @@ const HeroSection: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Headline */}
           <div className="mx-auto max-w-5xl text-center">
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
@@ -338,7 +332,6 @@ const HeroSection: React.FC = () => {
             conversation with your document.
           </motion.p>
 
-          {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -357,7 +350,7 @@ const HeroSection: React.FC = () => {
             </motion.div>
           </motion.div>
 
-          {/* ── Video Preview Mockup ── */}
+          {/* Video Preview */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}

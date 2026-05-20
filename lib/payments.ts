@@ -9,13 +9,18 @@ interface PolarSubscriptionPayload {
     customerId: string | null;
     productId: string | null;
     status: string;
-    currentPeriodEnd: string | null;
+    currentPeriodEnd: string | Date | null;
     customer?: {
       externalId?: string | null;
       email?: string | null;
     };
   };
 }
+
+const toNullableDate = (value: string | Date | null) => {
+  if (!value) return null;
+  return value instanceof Date ? value : new Date(value);
+};
 
 // Get Polar Customer ID for a given Clerk user
 export const getPolarCustomerId = async (
@@ -80,7 +85,7 @@ export const handleSubscriptionActive = async (
       polarSubscriptionId: id,
       polarProductId: productId,
       status: "active",
-      currentPeriodEnd: currentPeriodEnd ? new Date(currentPeriodEnd) : null,
+      currentPeriodEnd: toNullableDate(currentPeriodEnd),
       updatedAt: new Date(),
     });
     return;
@@ -92,7 +97,7 @@ export const handleSubscriptionActive = async (
       polarCustomerId: customerId,
       polarProductId: productId,
       status: "active",
-      currentPeriodEnd: currentPeriodEnd ? new Date(currentPeriodEnd) : null,
+      currentPeriodEnd: toNullableDate(currentPeriodEnd),
       updatedAt: new Date(),
     })
     .where(eq(subscriptions.polarSubscriptionId, id));
@@ -109,7 +114,7 @@ export const handleSubscriptionUpdated = async (
     .set({
       polarProductId: productId,
       status: status === "active" ? "active" : status,
-      currentPeriodEnd: currentPeriodEnd ? new Date(currentPeriodEnd) : null,
+      currentPeriodEnd: toNullableDate(currentPeriodEnd),
       updatedAt: new Date(),
     })
     .where(eq(subscriptions.polarSubscriptionId, id));

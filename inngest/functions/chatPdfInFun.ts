@@ -16,7 +16,6 @@ export const processPdfForChat = inngest.createFunction(
   {
     event: "pdf/chat.uploaded",
   },
-  // @ts-expect-error - publish is added by realtimeMiddleware at runtime
   async ({ event, step, publish }) => {
     const { chatPdfId, fileUrl } = event.data as {
       chatPdfId: string;
